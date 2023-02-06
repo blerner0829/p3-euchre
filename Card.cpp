@@ -89,48 +89,68 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
  //EFFECTS Initializes Card to the Two of Spades
 Card::Card() {
-  assert(false);
+  rank = TWO;
+  suit = SPADES;
 }
 
 //EFFECTS Initializes Card to specified rank and suit
 Card::Card(Rank rank_in, Suit suit_in) {
-  assert(false);
+  rank = rank_in;
+  suit = suit_in;
 }
+
 //EFFECTS Returns the rank
 Rank Card::get_rank() const {
-  assert(false);
+  return rank;
 }
 
 //EFFECTS Returns the suit.  Does not consider trump.
 Suit Card::get_suit() const {
-  assert(false);
+  return suit;
 }
 
 //EFFECTS Returns the suit
 //HINT: the left bower is the trump suit!
 Suit Card::get_suit(Suit trump) const {
-  assert(false);
-}
+  if (is_left_bower(trump) == true) {
+    if (trump == HEARTS) {
+      return DIAMONDS;
+    }
+    if (trump == DIAMONDS) {
+      return HEARTS;
+    }
+    if (trump == SPADES) {
+      return CLUBS;
+    }
+    if (trump == CLUBS) {
+      return SPADES;
+    }
+  } 
+    return suit;
+  }
 
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
 bool Card::is_face_or_ace() const {
-  assert(false);
+  return (rank == JACK || rank == QUEEN || rank == KING);
 }
 
 //EFFECTS Returns true if card is the Jack of the trump suit
 bool Card::is_right_bower(Suit trump) const {
-  assert(false);
+  return suit == trump && rank == JACK;
 }
 
 //EFFECTS Returns true if card is the Jack of the next suit
 bool Card::is_left_bower(Suit trump) const {
-  assert(false);
-}
-
+    return (rank == JACK) && ((trump == SPADES && suit == CLUBS) || 
+            (trump == CLUBS && suit == SPADES) || 
+            (trump == HEARTS && suit == DIAMONDS) || 
+            (trump == DIAMONDS && suit == HEARTS));
+   
+  }
 //EFFECTS Returns true if the card is a trump card.  All cards of the trump
 // suit are trump cards.  The left bower is also a trump card.
 bool Card::is_trump(Suit trump) const {
-  assert(false);
+  return suit == trump || is_left_bower(trump) == true;
 }
 
 // NOTE: We HIGHLY recommend you check out the operator overloading
