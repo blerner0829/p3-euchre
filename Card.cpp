@@ -147,6 +147,7 @@ bool Card::is_left_bower(Suit trump) const {
             (trump == DIAMONDS && suit == HEARTS));
    
   }
+
 //EFFECTS Returns true if the card is a trump card.  All cards of the trump
 // suit are trump cards.  The left bower is also a trump card.
 bool Card::is_trump(Suit trump) const {
@@ -160,7 +161,8 @@ bool Card::is_trump(Suit trump) const {
 //   operator<<
 //EFFECTS Prints Card to stream, for example "Two of Spades"
 std::ostream & operator<<(std::ostream &os, const Card &card) {
-  assert(false);
+  os << RANK_NAMES[card.get_rank()] << "of" << SUIT_NAMES[card.get_suit()];
+  return os;
 }
 
 //EFFECTS Reads a Card from a stream in the format "Two of Spades"
