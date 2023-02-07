@@ -161,7 +161,7 @@ bool Card::is_trump(Suit trump) const {
 //   operator<<
 //EFFECTS Prints Card to stream, for example "Two of Spades"
 std::ostream & operator<<(std::ostream &os, const Card &card) {
-  os << RANK_NAMES[card.get_rank()] << "of" << SUIT_NAMES[card.get_suit()];
+  os << RANK_NAMES[card.get_rank()] << " of " << SUIT_NAMES[card.get_suit()];
   return os;
 }
 
