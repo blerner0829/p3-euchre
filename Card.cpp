@@ -173,7 +173,8 @@ std::istream & operator>>(std::istream &is, Card &card) {
   string junk = "";
   string suit = "";
   is >> rank >> junk >> suit;
-  Card(string_to_rank(rank), string_to_suit(suit));
+  card = Card(string_to_rank(rank), string_to_suit(suit));
+  return is;
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs.
@@ -220,19 +221,24 @@ bool operator!=(const Card &lhs, const Card &rhs) {
 
 //EFFECTS returns the next suit, which is the suit of the same color
 Suit Suit_next(Suit suit) {
-  if (suit == 0) {
+  if (suit == SPADES) {
     return CLUBS;
   }
-  else if (suit == 1) {
+  else if (suit == HEARTS) {
     return DIAMONDS;
   }
-  else if (suit == 2) {
+  else if (suit == CLUBS) {
     return SPADES;
   }
-  else if (suit == 3) {
+  else if (suit == DIAMONDS) {
     return HEARTS;
   }
+  else {
+    // return a default value, we will set as spades
+    return SPADES;
+  }
 }
+
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
