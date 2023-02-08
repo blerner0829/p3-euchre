@@ -181,42 +181,89 @@ std::istream & operator>>(std::istream &is, Card &card) {
 //  Does not consider trump.
 //   operator<
 bool operator<(const Card &lhs, const Card &rhs) {
-  return lhs < rhs;
+  if (lhs.get_suit() < rhs.get_suit()) {
+    return true;
+  }
+  else if (lhs.get_suit() == rhs.get_suit()) {
+    if (lhs.get_rank() < rhs.get_rank()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 //   operator<=
 bool operator<=(const Card &lhs, const Card &rhs) {
-  return (lhs < rhs) || (lhs == rhs);
+  if (lhs < rhs) {
+    return true;
+  }
+  else if ((lhs.get_suit() == rhs.get_suit()) &&
+           (lhs.get_rank() == rhs.get_rank())) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
 //   operator>
 bool operator>(const Card &lhs, const Card &rhs) {
-  return lhs > rhs;
+  if (!(lhs < rhs)) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 //   operator>=
 bool operator>=(const Card &lhs, const Card &rhs) {
-  return (lhs > rhs) || (lhs == rhs);
+  if (!(lhs < rhs)) {
+    return true;
+  }
+  else if ((lhs.get_suit() == rhs.get_suit()) &&
+           (lhs.get_rank() == rhs.get_rank())) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
 //   operator==
 bool operator==(const Card &lhs, const Card &rhs) {
-  return lhs == rhs;
+  if ((lhs.get_suit() == rhs.get_suit()) &&
+      (lhs.get_rank() == rhs.get_rank())) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
 //   operator!=
 bool operator!=(const Card &lhs, const Card &rhs) {
-  return !(lhs == rhs);
+  if (!(lhs == rhs)){
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS returns the next suit, which is the suit of the same color
@@ -257,16 +304,8 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
   else if (!a.is_trump(trump) && b.is_trump(trump)) {
     return true;
   }
-  else if (a.get_suit() < b.get_suit()) {
+  else if (a < b) {
     return true;
-  }
-  else if (a.get_suit() == b.get_suit()) {
-    if (a.get_rank() < b.get_rank()) {
-      return true;
-    }
-    else {
-      return false;
-    }
   }
   else {
     return false;
@@ -305,16 +344,8 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
       return false;
     }
   }
-  else if (a.get_suit() < b.get_suit()) {
+  else if (a < b) {
     return true;
-  }
-  else if (a.get_suit() == b.get_suit()) {
-    if (a.get_rank() < b.get_rank()) {
-      return true;
-    }
-    else {
-      return false;
-    }
   }
   else {
     return false;
