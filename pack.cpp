@@ -11,9 +11,8 @@ void Pack::reset() {
   // NOTE: The standard order is the same as that in pack.in.
   // NOTE: Do NOT use pack.in in your implementation of this function
   Pack::Pack() {
-    
    for (int i = 0; i < PACK_SIZE - 1; i++) {
-    if (operator>(cards[i + 1], cards[i])) {
+    if (cards[i] > cards[i + 1]) {
         cards[i] = cards[i + 1];
     }
     }
