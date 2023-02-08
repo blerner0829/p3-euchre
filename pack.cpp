@@ -13,9 +13,7 @@ void Pack::reset() {
   Pack::Pack() {
     
    for (int i = 0; i < PACK_SIZE - 1; i++) {
-    if (cards[i + 1].get_suit() < cards[i].get_suit() || 
-        (cards[i + 1].get_suit() == cards[i].get_suit() && 
-         cards[i + 1].get_rank() < cards[i].get_rank())) {
+    if (operator>(cards[i + 1], cards[i])) {
         cards[i] = cards[i + 1];
     }
     }
