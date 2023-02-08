@@ -169,54 +169,69 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 //NOTE The Card class declares this operator>> "friend" function,
 //   operator>>
 std::istream & operator>>(std::istream &is, Card &card) {
-  assert(false);
+  string rank = "";
+  string junk = "";
+  string suit = "";
+  is >> rank >> junk >> suit;
+  Card(string_to_rank(rank), string_to_suit(suit));
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
 //   operator<
 bool operator<(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return lhs < rhs;
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 //   operator<=
 bool operator<=(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return (lhs < rhs) || (lhs == rhs);
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
 //   operator>
 bool operator>(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return lhs > rhs;
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 //   operator>=
 bool operator>=(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return (lhs > rhs) || (lhs == rhs);
 }
 
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
 //   operator==
 bool operator==(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return lhs == rhs;
 }
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
 //   operator!=
 bool operator!=(const Card &lhs, const Card &rhs) {
-  assert(false);
+  return !(lhs == rhs);
 }
 
 //EFFECTS returns the next suit, which is the suit of the same color
 Suit Suit_next(Suit suit) {
-  assert(false);
+  if (suit == 0) {
+    return CLUBS;
+  }
+  else if (suit == 1) {
+    return DIAMONDS;
+  }
+  else if (suit == 2) {
+    return SPADES;
+  }
+  else if (suit == 3) {
+    return HEARTS;
+  }
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
