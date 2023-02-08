@@ -22,7 +22,11 @@ void Pack::reset() {
   // MODIFIES: pack_input
   // EFFECTS: Initializes Pack by reading from pack_input.
   Pack::Pack(std::istream& pack_input) {
-    assert(false);
+    int i = 0;
+    while (pack_input >> cards[i]) {
+        ++i;
+    }
+    next = 0;
   }
 
   // REQUIRES: cards remain in the Pack
