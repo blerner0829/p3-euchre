@@ -31,8 +31,10 @@ void Pack::reset() {
 
   // REQUIRES: cards remain in the Pack
   // EFFECTS: Returns the next card in the pack and increments the next index
-  Pack::Card deal_one() {
-    assert(false);
+  Card Pack::deal_one() {
+    Card card = cards[next];
+    ++next;
+    return card;
   }
 
   // EFFECTS: Resets next index to first card in the Pack
