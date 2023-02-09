@@ -39,7 +39,7 @@ void Pack::reset() {
 
   // EFFECTS: Resets next index to first card in the Pack
   void Pack::reset() {
-    assert(false);
+    next = 0;
   }
 
   // EFFECTS: Shuffles the Pack and resets the next index. This
