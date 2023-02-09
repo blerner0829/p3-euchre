@@ -46,5 +46,9 @@ void Pack::reset() {
   //          performs an in shuffle seven times. See
   //          https://en.wikipedia.org/wiki/In_shuffle.
   void Pack::shuffle() {
-    assert(false);
+    //Cut deck in half
+    //Set first element equal to value of the first of the cut deck
+    //Set the second element equal to the original first element
+    //Alternate cards from each half until deck is fully shuffled
+    //Final card should be last card of first half
   }
