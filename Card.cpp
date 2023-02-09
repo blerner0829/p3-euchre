@@ -131,7 +131,7 @@ Suit Card::get_suit(Suit trump) const {
 
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
 bool Card::is_face_or_ace() const {
-  return (rank == JACK || rank == QUEEN || rank == KING);
+  return (rank == JACK || rank == QUEEN || rank == KING || rank == ACE);
 }
 
 //EFFECTS Returns true if card is the Jack of the trump suit
