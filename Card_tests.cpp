@@ -75,4 +75,13 @@ TEST(tests_is_trump) {
     ASSERT_TRUE(c2.is_trump(CLUBS));
 }
 
+TEST(tests_card_less) {
+    Card ace_of_spades = Card(ACE, SPADES);
+    Card two_of_spades = Card(TWO, SPADES);
+    Card king_of_hearts = Card(KING, HEARTS);
+    ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, SPADES));
+    ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, SPADES));
+    ASSERT_FALSE(Card_less(king_of_hearts, ace_of_spades, HEARTS));
+}
+
 TEST_MAIN()

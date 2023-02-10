@@ -184,43 +184,21 @@ bool operator<(const Card &lhs, const Card &rhs) {
 //  Does not consider trump.
 //   operator<=
 bool operator<=(const Card &lhs, const Card &rhs) {
-  if (lhs < rhs) {
-    return true;
-  }
-  else if (lhs.get_rank() == rhs.get_rank()) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  return lhs.get_rank() < rhs.get_rank() || lhs.get_rank() == rhs.get_rank();
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
 //   operator>
 bool operator>(const Card &lhs, const Card &rhs) {
-
-if (rhs < lhs) {
-  return true;
-}
-else {
-  return false;
-}
+  return rhs.get_rank() < lhs.get_rank();
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 //   operator>=
 bool operator>=(const Card &lhs, const Card &rhs) {
-  if (!(lhs < rhs)) {
-    return true;
-  }
-  else if (lhs.get_rank() == rhs.get_rank()) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  return lhs.get_rank() <= rhs.get_rank();
 }
 
 
@@ -228,26 +206,15 @@ bool operator>=(const Card &lhs, const Card &rhs) {
 //  Does not consider trump.
 //   operator==
 bool operator==(const Card &lhs, const Card &rhs) {
-  if (lhs.get_rank() == rhs.get_rank()) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  return lhs.get_rank() == rhs.get_rank();
 }
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
 //   operator!=
 bool operator!=(const Card &lhs, const Card &rhs) {
-  if (!(lhs == rhs)){
-    return true;
-  }
-  else {
-    return false;
-  }
+  return lhs.get_rank() != rhs.get_rank();
 }
-
 
 //EFFECTS returns the next suit, which is the suit of the same color
 Suit Suit_next(Suit suit) {
