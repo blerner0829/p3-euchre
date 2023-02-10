@@ -41,6 +41,14 @@ TEST(tests_is_face) {
     ASSERT_FALSE(c4.is_face_or_ace());
 }
 
+TEST(test_is_right_bower) {
+    Card c(JACK, HEARTS);
+    ASSERT_TRUE(c.is_right_bower(HEARTS));
+    ASSERT_FALSE(c.is_right_bower(DIAMONDS));
+    Card c1(QUEEN, DIAMONDS);
+    ASSERT_FALSE(c1.is_right_bower(DIAMONDS));
+}
+
 TEST(tests_is_left_bower) {
     Card c(JACK, HEARTS);
     ASSERT_TRUE(c.is_left_bower(DIAMONDS));
