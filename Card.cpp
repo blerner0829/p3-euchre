@@ -32,7 +32,7 @@ Rank string_to_rank(const std::string &str) {
       return static_cast<Rank>(r);
     }
   }
-  assert(false); // Input string didn't match any rank
+  assert(false); /// Input string didn't match any rank
 }
 
 //EFFECTS Prints Rank to stream, for example "Two"
