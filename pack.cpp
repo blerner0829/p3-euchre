@@ -1,9 +1,5 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 #include "Pack.h"
-void Pack::reset() {
-  assert(false);
-  assert(next); // DELETEME: avoid error "private field is not used"
-}
 // EFFECTS: Initializes the Pack to be in the following standard order:
   //          the cards of the lowest suit arranged from lowest rank to
   //          highest rank, followed by the cards of the next lowest suit
@@ -59,4 +55,9 @@ void Pack::reset() {
       ++shuffleTimes;
     }
     reset();
+  }
+
+// EFFECTS: returns true if there are no more cards left in the pack
+  bool Pack::empty() const {
+    return next == PACK_SIZE;
   }
