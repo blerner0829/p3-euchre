@@ -46,9 +46,17 @@ void Pack::reset() {
   //          performs an in shuffle seven times. See
   //          https://en.wikipedia.org/wiki/In_shuffle.
   void Pack::shuffle() {
-    //Cut deck in half
-    //Set first element equal to value of the first of the cut deck
-    //Set the second element equal to the original first element
-    //Alternate cards from each half until deck is fully shuffled
-    //Final card should be last card of first half
+    Card newDeck[PACK_SIZE];
+    int shuffleTimes = 0;
+    while (shuffleTimes < 7) {
+      for (int i = 0; i < PACK_SIZE / 2; ++i) {
+        newDeck[2 * i] = cards[i];
+        newDeck[2 * i + 1] = cards[i + PACK_SIZE / 2];
+      }
+      for (int i = 0; i < PACK_SIZE; i++){
+        cards[i] = newDeck[i];
+      }
+      ++shuffleTimes;
+    }
+    reset();
   }
