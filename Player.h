@@ -52,6 +52,10 @@ class Player {
 
   // Needed to avoid some compiler errors
   virtual ~Player() {}
+
+  private:
+
+  void print_hand() const;
 };
 
 //EFFECTS: Returns a pointer to a player with the given name and strategy
