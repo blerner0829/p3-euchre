@@ -26,4 +26,56 @@ void print_hand() const {
          << "[" << i << "] " << hand[i] << "\n";
 }
 
+class Simple: public Player {
+    const std::string & get_name() override const {
 
+    }
+
+    void add_card(const Card &c) override {
+
+    }
+
+    bool make_trump(const Card &upcard, bool is_dealer,
+                          int round, Suit &order_up_suit) override const {
+    
+    }
+    
+    void add_and_discard(const Card &upcard) override {
+
+    }
+
+    Card lead_card(Suit trump) override {
+
+    }
+
+    Card play_card(const Card &led_card, Suit trump) override {
+
+    }
+}
+
+class Human: public Player {
+    const std::string & get_name() override const {
+
+    }
+
+    void add_card(const Card &c) override {
+
+    }
+
+    bool make_trump(const Card &upcard, bool is_dealer,
+                          int round, Suit &order_up_suit) override const {
+    
+    }
+    
+    void add_and_discard(const Card &upcard) override {
+
+    }
+
+    Card lead_card(Suit trump) override {
+
+    }
+
+    Card play_card(const Card &led_card, Suit trump) override {
+        
+    }
+}
