@@ -7,11 +7,14 @@
   // NOTE: The standard order is the same as that in pack.in.
   // NOTE: Do NOT use pack.in in your implementation of this function
   Pack::Pack() {
-   for (int i = 0; i < PACK_SIZE - 1; i++) {
-    if (cards[i] > cards[i + 1]) {
-        cards[i] = cards[i + 1];
+    int count = 0;
+    for (int s = SPADES; s <= DIAMONDS; ++s) {
+        for (int r = NINE; r <= ACE; ++r) {
+            cards[count] = Card(static_cast<Rank>(r), static_cast<Suit>(s));
+            ++count;
     }
     }
+    next = 0;
   }
   // REQUIRES: pack_input contains a representation of a Pack in the
   //           format required by the project specification

@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/Card_public_test.exe",
+            "program": "${workspaceFolder}/Pack_tests.exe",
             "args": [],
             "cwd": "${fileDirname}",
         }

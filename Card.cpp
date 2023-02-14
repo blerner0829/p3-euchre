@@ -44,8 +44,9 @@ std::ostream & operator<<(std::ostream &os, Rank rank) {
 //EFFECTS Reads a Rank from a stream, for example "Two" -> TWO
 std::istream & operator>>(std::istream &is, Rank &rank) {
   string str;
-  is >> str;
-  rank = string_to_rank(str);
+  if(is >> str) {
+    rank = string_to_rank(str);
+  }
   return is;
 }
 
@@ -79,8 +80,9 @@ std::ostream & operator<<(std::ostream &os, Suit suit) {
 //EFFECTS Reads a Suit from a stream, for example "Spades" -> SPADES
 std::istream & operator>>(std::istream &is, Suit &suit) {
   string str;
-  is >> str;
-  suit = string_to_suit(str);
+  if (is >> str) {
+    suit = string_to_suit(str);
+  }
   return is;
 }
 
@@ -160,11 +162,11 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 //NOTE The Card class declares this operator>> "friend" function,
 //   operator>>
 std::istream & operator>>(std::istream &is, Card &card) {
-  string rank = "";
+  Rank strRank;
   string junk = "";
-  string suit = "";
-  is >> rank >> junk >> suit;
-  card = Card(string_to_rank(rank), string_to_suit(suit));
+  Suit strSuit;
+  is >> strRank >> junk >> strSuit;
+  card = Card(strRank, strSuit);
   return is;
 }
 
