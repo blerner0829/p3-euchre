@@ -58,8 +58,8 @@ class Player {
  private:
 
   void print_hand() const;
-
   vector<Card> hand;
+  string name;
 };
 
 #endif
