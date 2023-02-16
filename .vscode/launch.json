@@ -8,10 +8,13 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
+<<<<<<< HEAD
             "program": "${workspaceFolder}/Pack_tests.exe",
+=======
+            "program": "${workspaceFolder}/<executable file>",
+>>>>>>> 33b10f662ca89f286981936aa0ad04aba285910d
             "args": [],
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}"
         }
-
     ]
 }
