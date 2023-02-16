@@ -18,8 +18,8 @@ class SimplePlayer: public Player {
   SimplePlayer(string name_in) 
   : name(name_in) {}
 
-  const std::string & get_name() const {
-    
+  const string & get_name() const {
+    return name;
   }
 
   void add_card(const Card &c) {
@@ -82,12 +82,12 @@ class HumanPlayer: public Player {
     HumanPlayer(string name_in) 
     : name(name_in) {}
 
-    const std::string & get_name() const {
-
+    const string & get_name() const {
+      return name;
     }
 
     void add_card(const Card &c) {
-
+      hand.push_back(c);
     }
 
     bool make_trump(const Card &upcard, bool is_dealer,

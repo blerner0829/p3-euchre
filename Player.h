@@ -18,7 +18,7 @@
 class Player {
  public:
 
-  //EFFECTS returns player's name
+  //EFFECTS returns player's name`
   virtual const std::string & get_name() const = 0;
 
   //REQUIRES player has less than MAX_HAND_SIZE cards
