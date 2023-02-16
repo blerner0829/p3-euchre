@@ -97,12 +97,13 @@ class HumanPlayer: public Player {
       string decision;
       cin >> decision;
 
-    if (decision != "pass") {
-      Suit ordered_up = string_to_suit(decision);
-    }
-    else {
-
-    }
+      if (decision != "pass") {
+        order_up_suit = string_to_suit(decision);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
     
     void add_and_discard(const Card &upcard) override {
