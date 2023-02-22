@@ -58,11 +58,31 @@ class SimplePlayer: public Player {
   }
 
   Card lead_card(Suit trump) {
-
-    //check for non trump cards
-    //for all non trump cards compare values
-    //play lowest of these
-    //if only trump play highest trump card
+    Card lead_card();
+    int trump_count;
+    //checks if there is at least one card of non trump
+    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+      if (hand[i].is_trump(trump)){
+        ++trump_count;
+      }
+    }
+    //chooses lead card for not all trump
+    if (trump_count < 5) { 
+      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
+        if ((hand[i-1] < hand[i]) && !(hand[i-1].is_trump(trump))) {
+         lead_card() = hand[i-1];
+        }
+      }
+    }
+    //chooses lead card for only trump
+    else {
+      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
+        if (hand[i-1] < hand[i]) {
+          lead_card() = hand[i-1];
+        }
+      }
+    }
+    return lead_card();
   }
 
   Card play_card(const Card &led_card, Suit trump) {
