@@ -86,18 +86,11 @@ class SimplePlayer: public Player {
   }
 
   Card play_card(const Card &led_card, Suit trump) {
-    //check for cards of led suit
+    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+      if (hand[i].get_suit() == led_card.get_suit()) {
 
-    Card previous = hand[0];
-    for (int j = 0; j < hand[].size(); ++j) {
-      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (Card_less(previous, hand[i], led_card, trump)) {}
-        else {
-          previous = hand[i];
-        }
-     }
+      }
     }
-    return previous;
     //if has, play highest of these
     //if not, play lowest card in hand
   }
@@ -137,16 +130,42 @@ class HumanPlayer: public Player {
       }
     }
     
-    void add_and_discard(const Card &upcard) override {
+    void add_and_discard(const Card &upcard) {
+      int cardNum = 0;
+
+      hand.push_back(upcard);
+      print_hand();
+      cout << "Discard upcard: [-1]\n";
+      cout << "Human player " << name << ", please select a card to discard:\n";
+      cin >> cardNum;
+
+      if (cardNum == -1) {
+        hand.erase(hand.begin() + 5);
+      }
+      else {
+        hand.erase(hand.begin() + cardNum);
+      }
 
     }
 
-    Card lead_card(Suit trump) override {
+    Card lead_card(Suit trump) {
+      int cardNum = 0;
 
+      print_hand();
+      cout << "Human player " << name << ", please select a card:\n";
+      cin >> cardNum;
+
+      return hand[cardNum];
     }
 
-    Card play_card(const Card &led_card, Suit trump) override {
-        
+    Card play_card(const Card &led_card, Suit trump) {
+      int cardNum = 0;
+
+      print_hand();
+      cout << "Human player " << name << ", please select a card:\n";
+      cin >> cardNum;
+
+      return hand[cardNum];
     }
 
  private:
