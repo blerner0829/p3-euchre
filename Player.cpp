@@ -4,11 +4,12 @@
 #include <cassert>
 #include <iostream>
 #include <array>
+#include <vector>
 using namespace std;
 
 
 std::ostream & operator<<(std::ostream &os, const Player &p) {
-  assert(false);
+  return os << p.get_name();
 }
 
 
@@ -58,8 +59,8 @@ class SimplePlayer: public Player {
   }
 
   Card lead_card(Suit trump) {
-    Card lead_card();
-    int trump_count;
+    Card lead_card;
+    int trump_count = 0;
     //checks if there is at least one card of non trump
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
       if (hand[i].is_trump(trump)){
@@ -67,10 +68,10 @@ class SimplePlayer: public Player {
       }
     }
     //chooses lead card for not all trump
-    if (trump_count < 5) { 
+    if (trump_count == 5) { 
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if ((hand[i-1] < hand[i]) && !(hand[i-1].is_trump(trump))) {
-         lead_card() = hand[i-1];
+         lead_card = hand[i-1];
         }
       }
     }
@@ -78,11 +79,11 @@ class SimplePlayer: public Player {
     else {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if (hand[i-1] < hand[i]) {
-          lead_card() = hand[i-1];
+          lead_card = hand[i];
         }
       }
     }
-    return lead_card();
+    return lead_card;
   }
 
   Card play_card(const Card &led_card, Suit trump) {
@@ -91,8 +92,9 @@ class SimplePlayer: public Player {
     Card previous = hand[0];
     for (int j = 0; j < hand.size(); ++j) {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (Card_less(previous, hand[i], led_card, trump)) {}
-        else {
+        if (Card_less(previous, hand[i], led_card, trump)) {
+
+        } else {
           previous = hand[i];
         }
      }
@@ -184,7 +186,7 @@ class HumanPlayer: public Player {
     for (size_t i=0; i < MAX_HAND_SIZE; ++i)
       cout << "Human player " << name << "'s hand: "
            << "[" << i << "] " << hand[i] << "\n";
-}
+  }
 };
 
 Player * Player_factory(const std::string &name, 
@@ -192,15 +194,12 @@ Player * Player_factory(const std::string &name,
   // We need to check the value of strategy and return 
   // the corresponding player type.
   if (strategy == "Simple") {
-    // The "new" keyword dynamically allocates an object.
     return new SimplePlayer(name);
   }
   else if (strategy == "Human") {
     return new HumanPlayer(name);
-  }
-  else {
-    // Invalid strategy if we get here
+  }else{
     assert(false);
+    return nullptr;
   }
-  return nullptr;
 }
