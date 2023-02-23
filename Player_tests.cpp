@@ -77,7 +77,6 @@ TEST(tests_simple_lead_card) {
     Card king_of_clubs(KING, CLUBS);
     Card queen_of_hearts(QUEEN, HEARTS);
     Suit trump(CLUBS);
-    vector<Card> hand;
     HumanPlayer person2("person2");
     person2.add_card(ten_of_hearts);
     person2.add_card(nine_of_spades);

@@ -44,23 +44,32 @@
   // EFFECTS: Shuffles the Pack and resets the next index. This
   //          performs an in shuffle seven times. See
   //          https://en.wikipedia.org/wiki/In_shuffle.
+
   void Pack::shuffle() {
     Card newDeck[PACK_SIZE];
     int shuffleTimes = 0;
+    int j = PACK_SIZE / 2;
     while (shuffleTimes < 7) {
-      for (int i = 0; i < PACK_SIZE / 2; ++i) {
-        newDeck[2 * i] = cards[i];
-        newDeck[2 * i + 1] = cards[i + PACK_SIZE / 2];
-      }
-      for (int i = 0; i < PACK_SIZE; i++){
+      for (int i = 0; i < PACK_SIZE - 1; ++i) {
+        if ((i + 1) % 2 == 0) {
+            newDeck[i] = cards[((i + 1) / 2) - 1];
+        }
+        else if ((i + 1) % 2 == 1) {
+            newDeck[i] = cards[j];
+            ++j;
+        }
+        }
+      for (int i = 0; i < PACK_SIZE - 1; i++) {
         cards[i] = newDeck[i];
       }
       ++shuffleTimes;
-    }
-    reset();
+      j = PACK_SIZE / 2;
+   }
+   reset();
   }
+
 
 // EFFECTS: returns true if there are no more cards left in the pack
   bool Pack::empty() const {
-    return next == PACK_SIZE - 1;
+    return next - 1 == PACK_SIZE - 1;
   }
