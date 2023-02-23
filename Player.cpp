@@ -93,8 +93,8 @@ class SimplePlayer: public Player {
     for (int j = 0; j < hand.size(); ++j) {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if (Card_less(previous, hand[i], led_card, trump)) {
-
-        } else {
+        } 
+        else {
           previous = hand[i];
         }
      }
@@ -198,7 +198,8 @@ Player * Player_factory(const std::string &name,
   }
   else if (strategy == "Human") {
     return new HumanPlayer(name);
-  }else{
+  }
+  else{
     assert(false);
     return nullptr;
   }
