@@ -62,5 +62,5 @@
 
 // EFFECTS: returns true if there are no more cards left in the pack
   bool Pack::empty() const {
-    return next == PACK_SIZE;
+    return next == PACK_SIZE - 1;
   }
