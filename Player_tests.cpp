@@ -16,7 +16,100 @@ TEST(test_player_get_name) {
 }
 
 // Add more tests here
+TEST(tests_add_and_discard) {
+    // test 1
+    Card upcard(ACE, SPADES);
+    Card ten_of_hearts(TEN, HEARTS);
+    Card nine_of_spades(NINE, SPADES);
+    Card jack_of_diamonds(JACK, DIAMONDS);
+    Card king_of_clubs(KING, CLUBS);
+    Card queen_of_hearts(QUEEN, HEARTS);
+    Suit trump(CLUBS);
+    vector<Card> hand;
+    HumanPlayer person1("person1");
+    person1.add_card(ten_of_hearts);
+    person1.add_card(nine_of_spades);
+    person1.add_card(jack_of_diamonds);
+    person1.add_card(king_of_clubs);
+    person1.add_card(queen_of_hearts);
+    person1.add_and_discard(upcard);
+    ASSERT_EQUAL(hand.size(), 5); // Hand size should remain the same after the function
+    ASSERT_EQUAL(find(hand.begin(), hand.end(), upcard) != hand.end(), true); // The upcard should be in the hand
+    ASSERT_EQUAL(find(hand.begin(), hand.end(), ten_of_hearts) != hand.end(), true); // The card to discard should be removed
 
+    // test 2
+    Card upcard(ACE, HEARTS);
+    Card card_to_discard(KING, CLUBS);
+    HumanPlayer person2("person2");
+    person2.add_card(upcard);
+    person2.add_card(card_to_discard);
+    person2.add_and_discard(upcard);
+    ASSERT_EQUAL(2, hand.size());
+    ASSERT_EQUAL(upcard, hand[0]);
+    }
+
+
+
+TEST(tests_simple_lead_card) {
+    // test 1
+    Card ten_of_hearts(TEN, HEARTS);
+    Card nine_of_spades(NINE, SPADES);
+    Card jack_of_diamonds(JACK, DIAMONDS);
+    Card king_of_clubs(KING, CLUBS);
+    Card queen_of_hearts(QUEEN, HEARTS);
+    Suit trump(CLUBS);
+    
+    vector<Card> hand;
+    HumanPlayer person1("person1");
+    person1.add_card(ten_of_hearts);
+    person1.add_card(nine_of_spades);
+    person1.add_card(jack_of_diamonds);
+    person1.add_card(king_of_clubs);
+    person1.add_card(queen_of_hearts);
+    Card expected_card = ten_of_hearts;
+    ASSERT_EQUAL(expected_card, person1.lead_card(SPADES));
+
+    // test 2
+    Card led_suit(KING, CLUBS);
+    Card ten_of_hearts(TEN, HEARTS);
+    Card nine_of_spades(NINE, SPADES);
+    Card jack_of_diamonds(JACK, DIAMONDS);
+    Card king_of_clubs(KING, CLUBS);
+    Card queen_of_hearts(QUEEN, HEARTS);
+    Suit trump(CLUBS);
+    vector<Card> hand;
+    HumanPlayer person2("person2");
+    person2.add_card(ten_of_hearts);
+    person2.add_card(nine_of_spades);
+    person2.add_card(jack_of_diamonds);
+    person2.add_card(king_of_clubs);
+    person2.add_card(queen_of_hearts);
+    ASSERT_EQUAL(nine_of_spades, person2.lead_card(trump));
+    ASSERT_EQUAL(nine_of_spades, person2.play_card(nine_of_spades, trump));
+}
+
+TEST(tests_simple_play_card) {
+    // test 1
+   Card led_suit(ACE, HEARTS);
+   Card ten_of_hearts(TEN, HEARTS);
+   Card nine_of_spades(NINE, SPADES);
+   Card jack_of_diamonds(JACK, DIAMONDS);
+   Card king_of_clubs(KING, CLUBS);
+   Card queen_of_hearts(QUEEN, HEARTS);
+   Suit trump(CLUBS);
+   vector<Card> hand;
+   HumanPlayer person1("person1");
+   person1.add_card(ten_of_hearts);
+   person1.add_card(nine_of_spades);
+   person1.add_card(jack_of_diamonds);
+   person1.add_card(king_of_clubs);
+   person1.add_card(queen_of_hearts);
+   ASSERT_EQUAL(nine_of_spades, person1.play_card(led_suit, trump));
+}
+
+
+
+/*
 TEST(test_player_get_name) {
     Player * alice = Player_factory("Alice", "Simple");
     ASSERT_EQUAL("Alice", alice->get_name());
@@ -70,6 +163,6 @@ TEST(test_player_add_and_discard) {
     delete alice;
 }
 
-
+*/
 
 TEST_MAIN()

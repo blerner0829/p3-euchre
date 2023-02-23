@@ -90,7 +90,7 @@ TEST(tests_card_less_led) {
     Card king_of_hearts = Card(KING, HEARTS);
     Card ten_of_clubs = Card(TEN, CLUBS);
     ASSERT_FALSE(Card_less(king_of_hearts, ten_of_clubs, king_of_hearts, DIAMONDS));
-    ASSERT_TRUE(Card_less(ten_of_clubs, ace_of_spades, ten_of_clubs, DIAMONDS));
+    ASSERT_FALSE(Card_less(ten_of_clubs, ace_of_spades, ten_of_clubs, DIAMONDS));
     ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, two_of_spades, DIAMONDS));
     ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, two_of_spades, DIAMONDS));
 }

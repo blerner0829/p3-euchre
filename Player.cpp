@@ -63,7 +63,7 @@ class SimplePlayer: public Player {
     int trump_count = 0;
     //checks if there is at least one card of non trump
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-      if (hand[i].is_trump(trump)){
+      if (hand[i].is_trump(trump)) {
         ++trump_count;
       }
     }
