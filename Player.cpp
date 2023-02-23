@@ -89,7 +89,7 @@ class SimplePlayer: public Player {
     //check for cards of led suit
 
     Card previous = hand[0];
-    for (int j = 0; j < hand[].size(); ++j) {
+    for (int j = 0; j < hand.size(); ++j) {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if (Card_less(previous, hand[i], led_card, trump)) {}
         else {
