@@ -56,8 +56,12 @@ class Player {
   virtual ~Player() {}
 
  private:
-  vector<Card> hand;
-  string name;
+  std::vector<Card> hand;
+  std::string name;
 };
+
+Player * Player_factory(const std::string &name, const std::string &strategy);
+
+std::ostream & operator<<(std::ostream &os, const Player &p);
 
 #endif
