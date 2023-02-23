@@ -13,18 +13,14 @@ TEST(test_pack_default_ctor) {
     ASSERT_EQUAL(NINE, first.get_rank());
     ASSERT_EQUAL(SPADES, first.get_suit());
 }
-/*
-TEST(test_pack_ctor) {
+
+TEST(test_pack_deal_one) {
     Pack pack;
     Card first = pack.deal_one();
+    ASSERT_EQUAL(NINE, first.get_rank());
+    ASSERT_EQUAL(SPADES, first.get_suit());
 }
-*/
-// Add more tests here
-//TEST(test_pack_ctor) {
-    //std::istream pack_input;
-    //Pack pack(pack_input);
-   // Card first = pack.deal_one();
-  //  ASSERT_EQUAL(SPADES , first.get_rank())
+
 
 
 
