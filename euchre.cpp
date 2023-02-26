@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Player.cpp"
 #include "Pack.h"
+#include "Card.h"
+#include <fstream>
 using namespace std;
 
 
@@ -14,8 +16,9 @@ int main(int argc, char **argv) {
     {string(argv[10]), string(argv[11])}
   };
   // Read command line args and check for errors
-  Game game;
-  game.set_filename(argv[1]);
+
+  ifstream input_file(argv[1]);
+  Game game(input_file);
   game.set_shuffle(argv[2]);
   game.set_maxPoints(argv[3]);
   game.player_maker(playerPairs);
@@ -28,20 +31,16 @@ int main(int argc, char **argv) {
 
 class Game {
  public:
-  Game() {
-    filename = "";
+  Game(istream& pack_input) :
+    pack(pack_input)
+    {
     maxPoints = 0;
     shuffle = false;
-    player;
     handNum = 0;
     dealer = 0;
     round = 0;
     team1 = 0;
     team2 = 0;
-  }
-
-  void set_filename(string str) {
-    filename = str;
   }
 
   void set_shuffle(string str) {
@@ -73,7 +72,11 @@ class Game {
 
   bool print_round() {
     if (round == 0) {
-      //if round 0 make trump
+      while (!trumpMade) {
+        for (int i = dealer + 1; i < dealer + 5; ++i) {
+          make_trump(i);
+        }
+      }
       ++round;
       return true;
     }
@@ -144,16 +147,26 @@ class Game {
   Pack pack;
   bool shuffle;
   int maxPoints;
-  string filename;
   int handNum;
   int dealer;
   int round;
   int team1;
   int team2;
+  Suit order_up_suit;
   bool trumpMade = false;
 
   void reset_round() {
     round = 0;
+    trumpMade = false;
+  }
+
+  bool is_dealer(int i) {
+    if (i == dealer) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   
   void shuffle();
@@ -183,23 +196,17 @@ class Game {
       player[dealer].add_card(pack.deal_one());
     }
   }
-  string make_trump(/* ... */) {
-    if (!player[dealer + 1].make_trump()) {
-        return "passes";
+  void make_trump(int i) {
+    Card upCard = pack.deal_one();
+    if (!player[i % 4].make_trump(upCard, is_dealer(i % 4), round, order_up_suit)) {
+        cout << player[i % 4].get_name() << "passes";
       }
-    if () {
-      trumpMade = true;
-      return "orders up " ;
+    else {
+      trumpMade = player[i % 4].make_trump(upCard, is_dealer(i % 4), round, order_up_suit);
+      cout << player[i].get_name() << "orders up" << order_up_suit;
     }
-    cout << player[(dealer + 1) % 4].get_name() 
-         << decision(round, (dealer + 1) % 4);
-    cout << player[(dealer + 2) % 4].get_name()
-         << decision(round, (dealer + 2) % 4);
-    cout << player[(dealer + 3) % 4].get_name()
-         << decision(round, (dealer + 3) % 4);
-    cout << player[dealer].get_name()
-         << decision(round, (dealer) % 4);
-  };
+  }
+
 
   void play_hand() {
     print_opening();
