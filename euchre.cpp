@@ -7,24 +7,6 @@
 #include <fstream>
 using namespace std;
 
-
-int main(int argc, char **argv) {
-  vector<pair<string, string>> playerPairs {
-    {string(argv[4]), string(argv[5])},
-    {string(argv[6]), string(argv[7])},
-    {string(argv[8]), string(argv[9])},
-    {string(argv[10]), string(argv[11])}
-  };
-  // Read command line args and check for errors
-
-  ifstream input_file(argv[1]);
-  Game game(input_file);
-  game.set_shuffle(argv[2]);
-  game.set_maxPoints(argv[3]);
-  game.player_maker(playerPairs);
-  game.play();
-}
-
 class Game {
  public:
   Game(istream& pack_input) :
@@ -89,8 +71,15 @@ class Game {
       return true;
     }
     else if (round == 2) {
-      ++round;
-      return true;
+      if (trumpMade) {
+        play_trick();
+        ++round;
+        return true;
+      }
+      else {
+        reset_round();
+        return false;
+      }
       //if round 2 either play normal hand (1st card if round 1 trump was made,
               //2nd if made round 0) OR discard hand (redeal, start new hand)
     }
@@ -184,7 +173,11 @@ class Game {
     }
   }
   
-  void shuffle();
+  void shuffleDeck() {
+    if (shuffle) {
+      pack.shuffle();
+    }
+  };
   void deal() {
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 1)%4].add_card(pack.deal_one());
@@ -224,6 +217,7 @@ class Game {
   }
 
   void play_trick() {
+    Card cardGreatest;
     cout << player[orderUpPlayer].lead_card(order_up_suit) << " led by "
          << player[orderUpPlayer].get_name() << endl;
     cout << player[(orderUpPlayer + 1) % 4].play_card(player[orderUpPlayer].
@@ -236,9 +230,40 @@ class Game {
          lead_card(order_up_suit), order_up_suit) << " played by " 
          << player[(orderUpPlayer + 3) % 4].get_name() << endl;
 
+    vector<pair<Card, string>> trickInfo {
+      {player[orderUpPlayer].lead_card(order_up_suit),
+       player[orderUpPlayer].get_name()},
+      {player[(orderUpPlayer + 1) % 4].play_card(player[orderUpPlayer].
+       lead_card(order_up_suit), order_up_suit),
+       player[(orderUpPlayer + 1) % 4].get_name()},
+      {player[(orderUpPlayer + 2) % 4].play_card(player[orderUpPlayer].
+       lead_card(order_up_suit), order_up_suit),
+       player[(orderUpPlayer + 2) % 4].get_name()},
+      {player[(orderUpPlayer + 3) % 4].play_card(player[orderUpPlayer].
+       lead_card(order_up_suit), order_up_suit),
+       player[(orderUpPlayer + 3) % 4].get_name()}
+    };
+
+    cardGreatest = player[orderUpPlayer].lead_card(order_up_suit);
+    string winningPlayer = "";
+    
+    for (int i = 1; i < 4; ++i) {
+      if (Card_less(cardGreatest, player[(orderUpPlayer + i) % 4].play_card(player[orderUpPlayer].
+       lead_card(order_up_suit), order_up_suit), player[orderUpPlayer].lead_card(order_up_suit), order_up_suit)) {
+        cardGreatest = player[(orderUpPlayer + i) % 4].play_card(player[orderUpPlayer].
+        lead_card(order_up_suit), order_up_suit);
+       }
+    }
+  
     //Compare all cards played, whichever has the highest value wins round
     //Player who won has name printed out below
-    cout <<  /*Winning Player*/ << " takes the trick" << endl;
+    for (int i = 0; i < 4; ++i) {
+      if (cardGreatest == trickInfo[i].first) {
+        winningPlayer = trickInfo[i].second;
+      }
+    }
+
+    cout <<  winningPlayer << " takes the trick" << endl;
     ++trickCounter;
   }
 
@@ -251,4 +276,19 @@ class Game {
 };
 
 
+int main(int argc, char **argv) {
+  vector<pair<string, string>> playerPairs {
+    {string(argv[4]), string(argv[5])},
+    {string(argv[6]), string(argv[7])},
+    {string(argv[8]), string(argv[9])},
+    {string(argv[10]), string(argv[11])}
+  };
+  // Read command line args and check for errors
 
+  ifstream input_file(argv[1]);
+  Game game(input_file);
+  game.set_shuffle(argv[2]);
+  game.set_maxPoints(argv[3]);
+  game.player_maker(playerPairs);
+  game.play();
+}

@@ -19,16 +19,16 @@ class SimplePlayer: public Player {
   SimplePlayer(string name_in) 
   : name(name_in) {}
 
-  const string & get_name() const {
+  const string & get_name() const override {
     return name;
   }
 
-  void add_card(const Card &c) {
+  void add_card(const Card &c) override{
     hand.push_back(c);
   }
 
   bool make_trump(const Card &upcard, bool is_dealer,
-                  int round, Suit &order_up_suit) const {
+                  int round, Suit &order_up_suit) const override{
     int numFaceAceLeft = 0;
     if (round == 1) {
       for (int i = 0; i < MAX_HAND_SIZE; ++i) {
@@ -62,7 +62,7 @@ class SimplePlayer: public Player {
     }
   }
     
-  void add_and_discard(const Card &upcard) {
+  void add_and_discard(const Card &upcard) override{
     int cardNum = 0;
     hand.push_back(upcard);
 
@@ -74,7 +74,7 @@ class SimplePlayer: public Player {
     hand.erase(hand.begin() + cardNum);
   }
 
-  Card lead_card(Suit trump) {
+  Card lead_card(Suit trump) override{
     Card lead_card;
     int trump_count = 0;
     //checks if there is at least one card of non trump
@@ -102,7 +102,7 @@ class SimplePlayer: public Player {
     return lead_card;
   }
 
-  Card play_card(const Card &led_card, Suit trump) {
+  Card play_card(const Card &led_card, Suit trump) override{
     //check for cards of led suit
 
     Card previous = hand[0];
@@ -116,8 +116,6 @@ class SimplePlayer: public Player {
      }
     }
     return previous;
-    //if has, play highest of these
-    //if not, play lowest card in hand
   }
 
 
@@ -132,16 +130,16 @@ class HumanPlayer: public Player {
     HumanPlayer(string name_in) 
     : name(name_in) {}
 
-    const string & get_name() const {
+    const string & get_name() const override{
       return name;
     }
 
-    void add_card(const Card &c) {
+    void add_card(const Card &c) override{
       hand.push_back(c);
     }
 
     bool make_trump(const Card &upcard, bool is_dealer,
-                          int round, Suit &order_up_suit) const {
+                          int round, Suit &order_up_suit) const override{
       print_hand();
       cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
       string decision;
@@ -156,7 +154,7 @@ class HumanPlayer: public Player {
       }
     }
     
-    void add_and_discard(const Card &upcard) {
+    void add_and_discard(const Card &upcard) override{
       int cardNum = 0;
 
       hand.push_back(upcard);
@@ -174,7 +172,7 @@ class HumanPlayer: public Player {
 
     }
 
-    Card lead_card(Suit trump) {
+    Card lead_card(Suit trump) override{
       int cardNum = 0;
 
       print_hand();
@@ -184,7 +182,7 @@ class HumanPlayer: public Player {
       return hand[cardNum];
     }
 
-    Card play_card(const Card &led_card, Suit trump) {
+    Card play_card(const Card &led_card, Suit trump) override{
       int cardNum = 0;
 
       print_hand();
