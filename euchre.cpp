@@ -11,9 +11,9 @@ using namespace std;
 class Game {
  public:
   Game(istream& pack_input) :
-    pack(pack_input)
+    pack(pack_input),
+    player()
     {
-    player = {};
     maxPoints = 0;
     shuffle = false;
     handNum = 0;
