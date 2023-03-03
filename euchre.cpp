@@ -1,9 +1,9 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 
 #include <iostream>
-#include "Player.h"
-#include "Pack.h"
-#include "Card.h"
+#include "Player.cpp"
+#include "Pack.cpp"
+#include "Card.cpp"
 #include <fstream>
 using namespace std;
 
