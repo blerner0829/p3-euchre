@@ -11,17 +11,17 @@ using namespace std;
 class Game {
  public:
   Game(istream& pack_input) :
-    player(),
-    pack(pack_input),
-    maxPoints(0),
-    shuffle(false),
-    handNum(0),
-    dealer(0),
-    round(0),
-    team1(0),
-    team2(0),
-    trickCounter(1)
-  {}
+    pack(pack_input)
+    {
+    maxPoints = 0;
+    shuffle = false;
+    handNum = 0;
+    dealer = 0;
+    round = 0;
+    team1 = 0;
+    team2 = 0;
+    trickCounter = 1;
+  }
 
   void set_shuffle(string str) {
     if (str == "shuffle") {
