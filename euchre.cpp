@@ -13,6 +13,7 @@ class Game {
   Game(istream& pack_input) :
     pack(pack_input)
     {
+    player;
     maxPoints = 0;
     shuffle = false;
     handNum = 0;
