@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include "Player.cpp"
-#include "Pack.cpp"
-#include "Card.cpp"
+#include "Player.h"
+#include "Pack.h"
+#include "Card.h"
 #include <fstream>
 using namespace std;
 
