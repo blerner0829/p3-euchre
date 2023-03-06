@@ -1,7 +1,6 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 
 #include <iostream>
-#include "Player.cpp"
 #include "Player.h"
 #include "Pack.h"
 #include "Card.h"
@@ -121,31 +120,37 @@ class Game {
     }
   }
 
+  void delete_players() {
+    for (int i = 0; i < 4; ++i) {
+      delete player[i];
+    }
+  }
+
   void play() {
     while ((team1 < maxPoints) && (team2 < maxPoints)){
       play_hand();
     }
     if (team1 >= maxPoints) {
-      cout << player[0].get_name() << " and " 
-           << player[2].get_name() << " win!";
+      cout << player[0]->get_name() << " and " 
+           << player[2]->get_name() << " win!";
     }
     else if (team2 >= maxPoints) {
-      cout << player[1].get_name() << " and " 
-           << player[3].get_name() << " win!";
+      cout << player[1]->get_name() << " and " 
+           << player[3]->get_name() << " win!";
     }
   }
 
   void player_maker(vector<pair<string, string>> playerPairs) {
     int playerCount = 0;
     while (playerCount < 4) {
-      player.push_back(*Player_factory(playerPairs[playerCount].first,
+      player.push_back(Player_factory(playerPairs[playerCount].first,
                                     playerPairs[playerCount].second));
       ++playerCount;
     }
   }
 
  private:
-  vector<Player> player;
+  vector<Player*> player;
   Pack pack;
   bool shuffle;
   int maxPoints;
@@ -181,78 +186,75 @@ class Game {
   };
   void deal() {
     for (int i = 0; i < 3; ++i) {
-      player[(dealer + 1)%4].add_card(pack.deal_one());
+      player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[(dealer + 2)%4].add_card(pack.deal_one());
+      player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
-      player[(dealer + 3)%4].add_card(pack.deal_one());
+      player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[dealer].add_card(pack.deal_one());
+      player[dealer]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[(dealer + 1)%4].add_card(pack.deal_one());
+      player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
-      player[(dealer + 2)%4].add_card(pack.deal_one());
+      player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[(dealer + 3)%4].add_card(pack.deal_one());
+      player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
-      player[dealer].add_card(pack.deal_one());
+      player[dealer]->add_card(pack.deal_one());
     }
   }
   void make_trump(int i) {
     Card upCard = pack.deal_one();
-    if (!player[i % 4].make_trump(upCard, is_dealer(i % 4), round, order_up_suit)) {
-        cout << player[i % 4].get_name() << "passes";
+    if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit)) {
+        cout << player[i % 4]->get_name() << "passes";
       }
     else {
-      trumpMade = player[i % 4].make_trump(upCard, is_dealer(i % 4), round, order_up_suit);
-      cout << player[i % 4].get_name() << "orders up" << order_up_suit;
+      trumpMade = player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit);
+      cout << player[i % 4]->get_name() << "orders up" << order_up_suit;
       orderUpPlayer = i % 4;
     }
   }
 
   void play_trick() {
     Card cardGreatest;
-    cout << player[orderUpPlayer].lead_card(order_up_suit) << " led by "
-         << player[orderUpPlayer].get_name() << endl;
-    cout << player[(orderUpPlayer + 1) % 4].play_card(player[orderUpPlayer].
-         lead_card(order_up_suit), order_up_suit) << " played by " 
-         << player[(orderUpPlayer + 1) % 4].get_name() << endl;
-    cout << player[(orderUpPlayer + 2) % 4].play_card(player[orderUpPlayer].
-         lead_card(order_up_suit), order_up_suit) << " played by " 
-         << player[(orderUpPlayer + 2) % 4].get_name() << endl;
-    cout << player[(orderUpPlayer + 3) % 4].play_card(player[orderUpPlayer].
-         lead_card(order_up_suit), order_up_suit) << " played by " 
-         << player[(orderUpPlayer + 3) % 4].get_name() << endl;
-
     vector<pair<Card, string>> trickInfo {
-      {player[orderUpPlayer].lead_card(order_up_suit),
-       player[orderUpPlayer].get_name()},
-      {player[(orderUpPlayer + 1) % 4].play_card(player[orderUpPlayer].
+      {player[orderUpPlayer]->lead_card(order_up_suit),
+       player[orderUpPlayer]->get_name()},
+      {player[(orderUpPlayer + 1) % 4]->play_card(player[orderUpPlayer]->
        lead_card(order_up_suit), order_up_suit),
-       player[(orderUpPlayer + 1) % 4].get_name()},
-      {player[(orderUpPlayer + 2) % 4].play_card(player[orderUpPlayer].
+       player[(orderUpPlayer + 1) % 4]->get_name()},
+      {player[(orderUpPlayer + 2) % 4]->play_card(player[orderUpPlayer]->
        lead_card(order_up_suit), order_up_suit),
-       player[(orderUpPlayer + 2) % 4].get_name()},
-      {player[(orderUpPlayer + 3) % 4].play_card(player[orderUpPlayer].
+       player[(orderUpPlayer + 2) % 4]->get_name()},
+      {player[(orderUpPlayer + 3) % 4]->play_card(player[orderUpPlayer]->
        lead_card(order_up_suit), order_up_suit),
-       player[(orderUpPlayer + 3) % 4].get_name()}
+       player[(orderUpPlayer + 3) % 4]->get_name()}
     };
+    
+    cout << trickInfo[0].second << " led by "
+         << trickInfo[0].first << endl;
+    cout << trickInfo[1].second << " played by " 
+         << trickInfo[1].first << endl;
+    cout << trickInfo[2].second << " played by " 
+         << trickInfo[2].first << endl;
+    cout << trickInfo[3].second << " played by " 
+         << trickInfo[3].first << endl;
 
-    cardGreatest = player[orderUpPlayer].lead_card(order_up_suit);
+    
+
+    cardGreatest = trickInfo[0].first;
     string winningPlayer = "";
     
     for (int i = 1; i < 4; ++i) {
-      if (Card_less(cardGreatest, player[(orderUpPlayer + i) % 4].play_card(player[orderUpPlayer].
-       lead_card(order_up_suit), order_up_suit), player[orderUpPlayer].lead_card(order_up_suit), order_up_suit)) {
-        cardGreatest = player[(orderUpPlayer + i) % 4].play_card(player[orderUpPlayer].
-        lead_card(order_up_suit), order_up_suit);
+      if (Card_less(cardGreatest, trickInfo[i % 4].first, trickInfo[0].first, order_up_suit)) {
+        cardGreatest = trickInfo[i % 4].first;
        }
     }
   
@@ -292,4 +294,5 @@ int main(int argc, char **argv) {
   game.set_maxPoints(argv[3]);
   game.player_maker(playerPairs);
   game.play();
+  game.delete_players();
 }
