@@ -34,7 +34,7 @@ class Game {
 
   void print_opening() {
     cout << "Hand " << handNum << endl;
-    cout << player[dealer] << " deals" << endl;
+    cout << *player[dealer] << " deals" << endl;
     deal();
     cout << pack.deal_one() << " turned up" << endl;
     ++handNum;
@@ -213,11 +213,11 @@ class Game {
   void make_trump(int i) {
     Card upCard = pack.deal_one();
     if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit)) {
-        cout << player[i % 4]->get_name() << "passes";
+        cout << player[i % 4]->get_name() << " passes" << endl;
       }
     else {
       trumpMade = player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit);
-      cout << player[i % 4]->get_name() << "orders up" << order_up_suit;
+      cout << player[i % 4]->get_name() << " orders up " << order_up_suit << endl;
       orderUpPlayer = i % 4;
     }
   }
