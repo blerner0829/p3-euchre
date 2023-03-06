@@ -7,7 +7,6 @@
 #include <vector>
 using namespace std;
 
-
 std::ostream & operator<<(std::ostream &os, const Player &p) {
   return os << p.get_name();
 }
@@ -29,23 +28,55 @@ class SimplePlayer: public Player {
 
   bool make_trump(const Card &upcard, bool is_dealer,
                   int round, Suit &order_up_suit) const {
-    
+
     //Find amount of face cards, aces, and bowers of trump suit
     int numFaceAceLeft = 0;
-    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-      if ((upcard.get_suit() == hand[i].get_suit() && (hand[i].is_face_or_ace()))
-                      || (hand[i].is_left_bower(upcard.get_suit())))
-      ++numFaceAceLeft;
-    }
-    if (numFaceAceLeft >= 2) {
-      order_up_suit = upcard.get_suit();
-      return true;
-    }
-    else {
-      return false;
-    }
+    Suit trump = upcard.get_suit();
+
+    // if round 1 or round 2 and is_dealer is false
+    if (round == 1 && is_dealer == false) {
+      for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+        if ((upcard.get_suit() == hand[i].get_suit() && (hand[i].is_face_or_ace()))
+            || (hand[i].is_left_bower(upcard.get_suit()))) {
+            ++numFaceAceLeft;
+            }
+      }
+      if (numFaceAceLeft >= 2) {
+        order_up_suit = trump;
+        return true;
+      }
+      else {
+        return false;
+      }
   }
-    
+  // if round 2 & is_dealer is true
+  else if (round == 2) {
+    numFaceAceLeft = 0;
+    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+      if ((hand[i].is_face_or_ace() || hand[i].is_left_bower(upcard.get_suit())) 
+        && hand[i].get_suit() != upcard.get_suit()) {
+          ++numFaceAceLeft;
+          if (hand[i].get_suit() != upcard.get_suit()) {
+            trump = hand[i].get_suit();
+          }
+          }
+     }
+     if (numFaceAceLeft >= 2 && trump != upcard.get_suit()) {
+      order_up_suit = trump;
+      return true;
+          }
+
+      else {
+        if (is_dealer == true) {
+          order_up_suit = trump;
+          return true;
+        }
+        else {
+          return false;
+        }
+      }  
+    }
+} 
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
     hand.push_back(upcard);
