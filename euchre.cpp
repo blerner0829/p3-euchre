@@ -159,15 +159,25 @@ class Game {
   int round;
   int team1;
   int team2;
+  int onePoints;
+  int twoPoints;
   int orderUpPlayer;
   int trickCounter;
   Suit order_up_suit;
   bool trumpMade = false;
 
   void reset_round() {
+    if (onePoints > twoPoints) {
+      ++team1;
+    }
+    else if (twoPoints > onePoints) {
+      ++team2;
+    }
     round = 0;
     trumpMade = false;
     trickCounter = 1;
+    onePoints = 0;
+    twoPoints = 0;
   }
 
   bool is_dealer(int i) {
@@ -263,6 +273,12 @@ class Game {
     for (int i = 0; i < 4; ++i) {
       if (cardGreatest == trickInfo[i].first) {
         winningPlayer = trickInfo[i].second;
+        if (i % 2 == 0) {
+          ++onePoints;
+        }
+        else {
+          ++twoPoints;
+        }
       }
     }
 
