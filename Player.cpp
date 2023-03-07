@@ -31,10 +31,9 @@ class SimplePlayer: public Player {
 
     //Find amount of face cards, aces, and bowers of trump suit
     int numFaceAceLeft = 0;
-    Suit trump = upcard.get_suit();
 
-    // if round 1 or round 2 and is_dealer is false
-    if (round == 1 && is_dealer == false) {
+    // if round 1
+    if (round == 1) {
       for (int i = 0; i < MAX_HAND_SIZE; ++i) {
         if ((upcard.get_suit() == hand[i].get_suit() && (hand[i].is_face_or_ace()))
             || (hand[i].is_left_bower(upcard.get_suit()))) {
@@ -42,33 +41,31 @@ class SimplePlayer: public Player {
             }
       }
       if (numFaceAceLeft >= 2) {
-        order_up_suit = trump;
+        order_up_suit = upcard.get_suit();
         return true;
       }
       else {
         return false;
       }
   }
-  // if round 2 & is_dealer is true
+  // if round 2
   else if (round == 2) {
     numFaceAceLeft = 0;
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-      if ((hand[i].is_face_or_ace() || hand[i].is_left_bower(upcard.get_suit())) 
-        && hand[i].get_suit() != upcard.get_suit()) {
+      if (hand[i].is_face_or_ace() && 
+        hand[i].get_suit() == Suit_next(upcard.get_suit())) {
           ++numFaceAceLeft;
-          if (hand[i].get_suit() != upcard.get_suit()) {
-            trump = hand[i].get_suit();
           }
           }
-     }
-     if (numFaceAceLeft >= 2 && trump != upcard.get_suit()) {
-      order_up_suit = trump;
+
+     if (numFaceAceLeft >= 2) {
+      order_up_suit = Suit_next(upcard.get_suit());
       return true;
           }
 
       else {
         if (is_dealer == true) {
-          order_up_suit = trump;
+          order_up_suit = Suit_next(upcard.get_suit());
           return true;
         }
         else {
@@ -76,13 +73,16 @@ class SimplePlayer: public Player {
         }
       }  
     }
+  else {
+    return false;
+  }
 } 
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
     hand.push_back(upcard);
 
     for (int i = 0; i < hand.size(); ++i) {
-      if (hand[i] < hand[cardNum]) {
+      if (Card_less(hand[i], hand[cardNum], upcard.get_suit())) {
         cardNum = i;
       }
     }
@@ -90,7 +90,7 @@ class SimplePlayer: public Player {
   }
 
   Card lead_card(Suit trump) {
-    Card lead_card;
+    Card lead_card = hand[1];
     int trump_count = 0;
     //checks if there is at least one card of non trump
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
@@ -98,19 +98,21 @@ class SimplePlayer: public Player {
         ++trump_count;
       }
     }
-    //chooses lead card for not all trump
+    // chooses lead card for all trump
     if (trump_count == 5) { 
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if ((hand[i-1] < hand[i]) && !(hand[i-1].is_trump(trump))) {
-         lead_card = hand[i-1];
+        if (Card_less(lead_card, hand[i - 1], trump)) {
+          lead_card = hand[i - 1];
         }
       }
     }
-    //chooses lead card for only trump
+    // chooses lead card for when it's not all trump
+    // should this one account for left bower 
+    // or would the left bower count as a trump card?
     else {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (hand[i-1] < hand[i]) {
-          lead_card = hand[i];
+        if (hand[i - 1] > lead_card && !hand[i - 1].is_trump(trump)) {
+         lead_card = hand[i - 1];
         }
       }
     }

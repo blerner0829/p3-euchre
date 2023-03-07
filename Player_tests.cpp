@@ -1,7 +1,6 @@
  // Project UID 1d9f47bfc76643019cfbf037641defe1
 
 #include "Player.h"
-#include "Player.cpp"
 #include "unit_test_framework.h"
 
 #include <iostream>
@@ -15,153 +14,97 @@ TEST(test_player_get_name) {
     delete alice;
 }
 
+
 // Add more tests here
-TEST(tests_add_and_discard) {
-    // test 1
-    Card upcard(ACE, SPADES);
+    Card ace_of_spades(ACE, SPADES);
     Card ten_of_hearts(TEN, HEARTS);
     Card nine_of_spades(NINE, SPADES);
     Card jack_of_diamonds(JACK, DIAMONDS);
     Card king_of_clubs(KING, CLUBS);
+    Card jack_of_hearts(JACK, HEARTS);
     Card queen_of_hearts(QUEEN, HEARTS);
+    Card king_of_spades(KING, SPADES);
+    Card jack_of_clubs(JACK, CLUBS);
+    Card ace_of_hearts(ACE, HEARTS);
+    Card ten_of_clubs(TEN, CLUBS);
+    Card king_of_hearts(KING, HEARTS);
+    Card nine_of_hearts(NINE, HEARTS);
+
     Suit trump(CLUBS);
-    vector<Card> hand;
-    HumanPlayer person1("person1");
-    person1.add_card(ten_of_hearts);
-    person1.add_card(nine_of_spades);
-    person1.add_card(jack_of_diamonds);
-    person1.add_card(king_of_clubs);
-    person1.add_card(queen_of_hearts);
-    person1.add_and_discard(upcard);
-    ASSERT_EQUAL(hand.size(), 5); // Hand size should remain the same after the function
-    ASSERT_EQUAL(find(hand.begin(), hand.end(), upcard) != hand.end(), true); // The upcard should be in the hand
-    ASSERT_EQUAL(find(hand.begin(), hand.end(), ten_of_hearts) != hand.end(), true); // The card to discard should be removed
+//use playcard to test add card
+TEST(test_make_trump_true) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(queen_of_hearts);
+    player->add_card(jack_of_diamonds);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_spades);
+    ASSERT_FALSE(player->make_trump(ace_of_spades, false, 2, trump));
+    ASSERT_TRUE(player->make_trump(ace_of_spades, true, 2, trump));
+    cout << "(order_up_suit) Expected: clubs, Actual: " << trump << endl;
+    ASSERT_TRUE(player->make_trump(ace_of_spades, true, 1, trump));
+    delete player;
+}
+TEST(test_make_trump_false) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(nine_of_spades);
+    player->add_card(ten_of_hearts);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_spades);
+    ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 1, trump));
+    ASSERT_TRUE(player->make_trump(nine_of_spades, false, 1, trump));
+    delete player;
+}
 
-    // test 2
-    Card upcard(ACE, HEARTS);
-    Card card_to_discard(KING, CLUBS);
-    HumanPlayer person2("person2");
-    person2.add_card(upcard);
-    person2.add_card(card_to_discard);
-    person2.add_and_discard(upcard);
-    ASSERT_EQUAL(2, hand.size());
-    ASSERT_EQUAL(upcard, hand[0]);
-    }
+TEST(test_add_and_discard) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(nine_of_spades);
+    player->add_card(jack_of_hearts);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_spades);
+    ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 1, trump));
+    player->add_and_discard(ace_of_hearts);
+    ASSERT_TRUE(player->make_trump(queen_of_hearts, false, 1, trump));
+    ASSERT_FALSE(player->make_trump(ten_of_clubs, false, 1, trump))
+    player->add_and_discard(king_of_clubs);
+    ASSERT_TRUE(player->make_trump(ten_of_clubs, false, 1, trump))
+    delete player;
+}
 
+TEST(test_lead_card_basic) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(queen_of_hearts);
+    player->add_card(jack_of_diamonds);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_clubs);
+    ASSERT_EQUAL(king_of_clubs, player->lead_card(SPADES));
+    ASSERT_EQUAL(queen_of_hearts, player->lead_card(CLUBS));
+    delete player;
+}
 
-
-TEST(tests_simple_lead_card) {
-    // test 1
-    Card ten_of_hearts(TEN, HEARTS);
-    Card nine_of_spades(NINE, SPADES);
-    Card jack_of_diamonds(JACK, DIAMONDS);
-    Card king_of_clubs(KING, CLUBS);
-    Card queen_of_hearts(QUEEN, HEARTS);
-    Suit trump(CLUBS);
+TEST(test_lead_card_complex) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(queen_of_hearts);
+    player->add_card(jack_of_diamonds);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_hearts);
+    player->add_card(ten_of_hearts);
+    // jack_of_clubs, jack_of_diamonds, ten_of_hearts, queen_of_hearts, king_of_hearts
+    ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
+    player->add_and_discard(nine_of_hearts);
+    // nine_of_hearts, ten_of_hearts, queen_of_hearts, jack_of_diamonds, king_of_hearts
+    ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
+    player->add_and_discard(jack_of_hearts);
+    // nine_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
+    ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
+    ASSERT_EQUAL(king_of_hearts, player->lead_card(CLUBS));
+    player->add_and_discard(ace_of_hearts);
+    // ace_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
+    ASSERT_EQUAL(jack_of_hearts, player->play_card(king_of_spades, HEARTS));
     
-    vector<Card> hand;
-    HumanPlayer person1("person1");
-    person1.add_card(ten_of_hearts);
-    person1.add_card(nine_of_spades);
-    person1.add_card(jack_of_diamonds);
-    person1.add_card(king_of_clubs);
-    person1.add_card(queen_of_hearts);
-    Card expected_card = ten_of_hearts;
-    ASSERT_EQUAL(expected_card, person1.lead_card(SPADES));
-
-    // test 2
-    Card led_suit(KING, CLUBS);
-    Card ten_of_hearts(TEN, HEARTS);
-    Card nine_of_spades(NINE, SPADES);
-    Card jack_of_diamonds(JACK, DIAMONDS);
-    Card king_of_clubs(KING, CLUBS);
-    Card queen_of_hearts(QUEEN, HEARTS);
-    Suit trump(CLUBS);
-    HumanPlayer person2("person2");
-    person2.add_card(ten_of_hearts);
-    person2.add_card(nine_of_spades);
-    person2.add_card(jack_of_diamonds);
-    person2.add_card(king_of_clubs);
-    person2.add_card(queen_of_hearts);
-    ASSERT_EQUAL(nine_of_spades, person2.lead_card(trump));
-    ASSERT_EQUAL(nine_of_spades, person2.play_card(nine_of_spades, trump));
+    ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
+    ASSERT_EQUAL(ace_of_hearts, player->lead_card(CLUBS));
+    ASSERT_EQUAL(ace_of_hearts, player->lead_card(DIAMONDS));
+    delete player;
 }
-
-TEST(tests_simple_play_card) {
-    // test 1
-   Card led_suit(ACE, HEARTS);
-   Card ten_of_hearts(TEN, HEARTS);
-   Card nine_of_spades(NINE, SPADES);
-   Card jack_of_diamonds(JACK, DIAMONDS);
-   Card king_of_clubs(KING, CLUBS);
-   Card queen_of_hearts(QUEEN, HEARTS);
-   Suit trump(CLUBS);
-   vector<Card> hand;
-   HumanPlayer person1("person1");
-   person1.add_card(ten_of_hearts);
-   person1.add_card(nine_of_spades);
-   person1.add_card(jack_of_diamonds);
-   person1.add_card(king_of_clubs);
-   person1.add_card(queen_of_hearts);
-   ASSERT_EQUAL(nine_of_spades, person1.play_card(led_suit, trump));
-}
-
-
-
-/*
-TEST(test_player_get_name) {
-    Player * alice = Player_factory("Alice", "Simple");
-    ASSERT_EQUAL("Alice", alice->get_name());
-    delete alice;
-}
-
-TEST(test_player_make_trump) {
-    Player * alice = Player_factory("Alice", "Simple");
-    Card upcard(JACK, SPADES);
-    Suit order_up_suit;
-    bool order_up = alice->make_trump(upcard, true, 1, order_up_suit);
-    ASSERT_TRUE(order_up);
-    ASSERT_EQUAL(SPADES, order_up_suit);
-    Card upcard2(QUEEN, DIAMONDS);
-    Suit order_up_suit2;
-    bool order_up2 = alice->make_trump(upcard2, true, 1, order_up_suit2);
-    ASSERT_FALSE(order_up2);
-
-    delete alice;
-}
-
-TEST(test_human_player_make_trump) {
-    Player * alice = Player_factory("Alice", "Human");
-    // replace standard input and output with our own for testing
-    stringstream ss;
-    string input = "DIAMONDS\n";
-    ss << input;
-    cin.rdbuf(ss.rdbuf());
-    stringstream out;
-    streambuf* old_cout = cout.rdbuf(out.rdbuf());
-
-    Card upcard(JACK, SPADES);
-    Suit order_up_suit;
-    bool order_up = alice->make_trump(upcard, true, 1, order_up_suit);
-    ASSERT_TRUE(order_up);
-    ASSERT_EQUAL(DIAMONDS, order_up_suit);
-
-    // restore standard output
-    cout.rdbuf(old_cout);
-
-    delete alice;
-}
-
-TEST(test_player_add_and_discard) {
-    vector<Card> hand;
-    Player * alice = Player_factory("Alice", "Simple");
-    Card upcard(JACK, SPADES);
-    alice->add_and_discard(upcard);
-    ASSERT_EQUAL(1, alice->hand.size());
-    ASSERT_FALSE(alice->hand[0] == upcard);
-    delete alice;
-}
-
-*/
 
 TEST_MAIN()
