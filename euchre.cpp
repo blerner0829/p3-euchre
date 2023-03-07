@@ -222,12 +222,15 @@ class Game {
   }
   void make_trump(int i) {
     Card upCard = pack.deal_one();
-    if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit)) {
+    if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4),
+                                     round, order_up_suit)) {
         cout << player[i % 4]->get_name() << " passes" << endl;
       }
     else {
-      trumpMade = player[i % 4]->make_trump(upCard, is_dealer(i % 4), round, order_up_suit);
-      cout << player[i % 4]->get_name() << " orders up " << order_up_suit << endl;
+      trumpMade = player[i % 4]->make_trump(upCard, is_dealer(i % 4),
+                                           round, order_up_suit);
+      cout << player[i % 4]->get_name() << " orders up " 
+                                        << order_up_suit << endl;
       orderUpPlayer = i % 4;
     }
   }
@@ -263,7 +266,8 @@ class Game {
     string winningPlayer = "";
     
     for (int i = 1; i < 4; ++i) {
-      if (Card_less(cardGreatest, trickInfo[i % 4].first, trickInfo[0].first, order_up_suit)) {
+      if (Card_less(cardGreatest, trickInfo[i % 4].first,
+                      trickInfo[0].first, order_up_suit)) {
         cardGreatest = trickInfo[i % 4].first;
        }
     }
@@ -303,12 +307,16 @@ int main(int argc, char **argv) {
     {string(argv[10]), string(argv[11])}
   };
   // Read command line args and check for errors
+  for (int i = 0; i < argc; ++i){
+    cout << argv[i] << " ";
+  }
 
   ifstream input_file(argv[1]);
   Game game(input_file);
   game.set_shuffle(argv[2]);
   game.set_maxPoints(argv[3]);
   game.player_maker(playerPairs);
+  cout << endl;
   game.play();
   game.delete_players();
 }
