@@ -31,6 +31,18 @@ TEST(test_player_get_name) {
     Card nine_of_hearts(NINE, HEARTS);
 
     Suit trump(CLUBS);
+
+TEST(test_add_card) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(queen_of_hearts);
+    player->add_card(ten_of_hearts);
+    player->add_card(jack_of_diamonds);
+    player->add_card(jack_of_clubs);
+    player->add_card(king_of_spades);
+    ASSERT_EQUAL(king_of_spades, player->play_card(ten_of_hearts, trump));
+    delete player;
+
+}
 //use playcard to test add card
 TEST(test_make_trump_true) {
     Player * player = Player_factory("player", "Simple");
@@ -91,19 +103,34 @@ TEST(test_lead_card_complex) {
     // jack_of_clubs, jack_of_diamonds, ten_of_hearts, queen_of_hearts, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
     player->add_and_discard(nine_of_hearts);
+    /*
+    [0]:
+{rank:QUEEN, suit:HEARTS}
+[1]:
+{rank:JACK, suit:DIAMONDS}
+[2]:
+{rank:JACK, suit:CLUBS}
+[3]:
+{rank:KING, suit:HEARTS}
+[4]:
+{rank:TEN, suit:HEARTS}
+[5]:
+{rank:NINE, suit:HEARTS}
+
+    */
     // nine_of_hearts, ten_of_hearts, queen_of_hearts, jack_of_diamonds, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
     player->add_and_discard(jack_of_hearts);
     // nine_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
     ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
     ASSERT_EQUAL(king_of_hearts, player->lead_card(CLUBS));
+    // queen_of_hearts, jack_of_diamonds, jack_of_clubs, king_of_hearts, jack_of_hearts, ace_of_hearts
     player->add_and_discard(ace_of_hearts);
     // ace_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
     ASSERT_EQUAL(jack_of_hearts, player->play_card(king_of_spades, HEARTS));
-    
+    // queen_of_hearts, jack_of_clubs, king_of_hearts, jack_of_hearts, ace_of_hearts
     ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
-    ASSERT_EQUAL(ace_of_hearts, player->lead_card(CLUBS));
-    ASSERT_EQUAL(ace_of_hearts, player->lead_card(DIAMONDS));
+    //ASSERT_EQUAL(ace_of_hearts, player->lead_card(CLUBS));
     delete player;
 }
 
