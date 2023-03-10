@@ -28,15 +28,15 @@ class SimplePlayer: public Player {
 
   bool make_trump(const Card &upcard, bool is_dealer,
                   int round, Suit &order_up_suit) const {
-
     //Find amount of face cards, aces, and bowers of trump suit
     int numFaceAceLeft = 0;
 
     // if round 1
     if (round == 1) {
-      for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-        if ((upcard.get_suit() == hand[i].get_suit() && (hand[i].is_face_or_ace()))
-            || (hand[i].is_left_bower(upcard.get_suit()))) {
+      // counts face cards, aces, and cards of trump suit
+      for (int i = 0; i < hand.size(); ++i) {
+        if (hand[i].is_trump(upcard.get_suit()) &&
+           hand[i].is_face_or_ace()) {
             ++numFaceAceLeft;
             }
       }
@@ -49,8 +49,64 @@ class SimplePlayer: public Player {
       }
   }
   // if round 2
-  else if (round == 2) {
-    numFaceAceLeft = 0;
+    else if (round == 2) {
+      numFaceAceLeft = 0;
+      int max = 0;
+      int previous = 0;
+      Card choice;
+      // determines the suit with the most face cards, 
+      // aces, and left_bowers, and records that number
+      // in round 2, the ordered up suit cannot be
+      //  the same suit as the upcard
+      for (int i = 0; i < hand.size(); ++i) {
+        for (int j = 0; j < hand.size(); ++j) {
+          if ((hand[i].get_suit() == hand[j].get_suit() 
+          || hand[j].is_left_bower(hand[i].get_suit()))
+          && hand[i].get_suit() != upcard.get_suit() 
+          && hand[j].is_face_or_ace()) {
+            ++previous;
+          }
+        }
+        if (previous > max) {
+          max = previous;
+          previous = 0;
+          choice = hand[i];
+        }
+        // this else if statement will make it
+        // so that if screw the dealer happens,
+        // then he'll pick his best card to be trump
+        else if (previous == max && Card_less(choice, hand[i], 
+                                              hand[i].get_suit())) {
+          max = previous;
+          previous = 0;
+          choice = hand[i];
+        }
+      }
+      numFaceAceLeft = max;
+      //FIXME possible bug: if no face cards choice is empty
+      if (numFaceAceLeft >= 2) {
+        order_up_suit = choice.get_suit();
+        return true;
+        }
+        // screw the dealer
+      else {
+        if (is_dealer == true) {
+            order_up_suit = choice.get_suit();
+            return true;
+          }
+          else {
+            return false;
+          }
+        } 
+    }
+    else {
+      return false;
+    }
+}
+// code that I'm too afraid to delete incase I got 
+// the specs wrong lets keep it here for
+  /*
+    // players can order up any suit other than upcard suit
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
       if (hand[i].is_face_or_ace() && 
         hand[i].get_suit() == Suit_next(upcard.get_suit())) {
@@ -77,11 +133,12 @@ class SimplePlayer: public Player {
     return false;
   }
 } 
+*/
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
     hand.push_back(upcard);
-
-    for (int i = 0; i < hand.size(); ++i) {
+    // find lowest value card
+    for (int i = 1; i < hand.size(); ++i) {
       if (Card_less(hand[i], hand[cardNum], upcard.get_suit())) {
         cardNum = i;
       }
@@ -110,6 +167,11 @@ class SimplePlayer: public Player {
     // should this one account for left bower 
     // or would the left bower count as a trump card?
     else {
+      for (int i = 0; i < hand.size(); ++i) {
+        if (!hand[i].is_trump(trump)) {
+          lead_card = hand[i];
+        }
+      }
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if (hand[i - 1] > lead_card && !hand[i - 1].is_trump(trump)) {
          lead_card = hand[i - 1];
@@ -121,18 +183,31 @@ class SimplePlayer: public Player {
 
   Card play_card(const Card &led_card, Suit trump) {
     //check for cards of led suit
-
-    Card previous = hand[0];
-    for (int j = 0; j < hand.size(); ++j) {
-      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (Card_less(previous, hand[i], led_card, trump)) {
-        } 
-        else {
-          previous = hand[i];
-        }
-     }
+    int count = 0;
+    int val = 0;
+    for (int i = 0; i < hand.size(); ++i) {
+      if (hand[i].get_suit() == led_card.get_suit()) {
+        // if hand contains card of led suit, increments by 1
+        ++count;
+      }
     }
-    return previous;
+    // if count > 0, plays highest card
+    if (count > 0) {
+    for (int i = 0; i < hand.size(); ++i) {
+      if (Card_less(hand[val], hand[i], led_card, trump)) {
+        val = i;
+      } 
+    }
+    }
+    // if count == 0, plays lowest card
+    else {
+      for (int i = 0; i < hand.size(); ++i) {
+      if (Card_less(hand[i], hand[val], led_card, trump)) {
+        val = i;
+      } 
+    }
+    }
+    return hand[val];
     //if has, play highest of these
     //if not, play lowest card in hand
   }
@@ -160,7 +235,8 @@ class HumanPlayer: public Player {
     bool make_trump(const Card &upcard, bool is_dealer,
                           int round, Suit &order_up_suit) const {
       print_hand();
-      cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
+      cout << "Human player " << name 
+          << ", please enter a suit, or \"pass\":\n";
       string decision;
       cin >> decision;
 
@@ -179,7 +255,8 @@ class HumanPlayer: public Player {
       hand.push_back(upcard);
       print_hand();
       cout << "Discard upcard: [-1]\n";
-      cout << "Human player " << name << ", please select a card to discard:\n";
+      cout << "Human player " << name 
+          << ", please select a card to discard:\n";
       cin >> cardNum;
 
       if (cardNum == -1) {

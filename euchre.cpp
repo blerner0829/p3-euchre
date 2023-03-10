@@ -20,6 +20,7 @@ class Game {
     team1 = 0;
     team2 = 0;
     trickCounter = 1;
+    trickCounter = 1;
   }
 
   void set_shuffle(string str) {
@@ -34,6 +35,7 @@ class Game {
 
   void print_opening() {
     cout << "Hand " << handNum << endl;
+    cout << *player[dealer] << " deals" << endl;
     cout << *player[dealer] << " deals" << endl;
     deal();
     cout << pack.deal_one() << " turned up" << endl;
@@ -53,10 +55,23 @@ class Game {
           make_trump(i);
         }
       }
+      while (!trumpMade) {
+        for (int i = dealer + 1; i < dealer + 5; ++i) {
+          make_trump(i);
+        }
+      }
       ++round;
       return true;
     }
     else if (round == 1) {
+      if (trumpMade) {
+        play_trick();
+      }
+      else {
+        for (int i = dealer + 1; i < dealer + 5; ++i) {
+          make_trump(i);
+        }
+      }
       if (trumpMade) {
         play_trick();
       }
@@ -85,11 +100,13 @@ class Game {
     }
     else if (round == 3) {
       play_trick();
+      play_trick();
       ++round;
       return true;
       //if round 3 play normal hand (2nd or 3rd card)
     }
     else if (round == 4) {
+      play_trick();
       play_trick();
       ++round;
       return true;
@@ -97,11 +114,21 @@ class Game {
     }
     else if (round == 5) {
       play_trick();
+      play_trick();
       ++round;
       return true;
       //if round 5 play normal hand (4th or 5th)
     }
     else if (round == 6) {
+      if (trickCounter == 5) {
+        play_trick();
+        ++round;
+        return true;
+      }
+      else {
+        reset_round();
+        return false;
+      }
       if (trickCounter == 5) {
         play_trick();
         ++round;
@@ -126,6 +153,12 @@ class Game {
     }
   }
 
+  void delete_players() {
+    for (int i = 0; i < 4; ++i) {
+      delete player[i];
+    }
+  }
+
   void play() {
     while ((team1 < maxPoints) && (team2 < maxPoints)){
       play_hand();
@@ -133,8 +166,12 @@ class Game {
     if (team1 >= maxPoints) {
       cout << player[0]->get_name() << " and " 
            << player[2]->get_name() << " win!";
+      cout << player[0]->get_name() << " and " 
+           << player[2]->get_name() << " win!";
     }
     else if (team2 >= maxPoints) {
+      cout << player[1]->get_name() << " and " 
+           << player[3]->get_name() << " win!";
       cout << player[1]->get_name() << " and " 
            << player[3]->get_name() << " win!";
     }
@@ -144,12 +181,14 @@ class Game {
     int playerCount = 0;
     while (playerCount < 4) {
       player.push_back(Player_factory(playerPairs[playerCount].first,
+      player.push_back(Player_factory(playerPairs[playerCount].first,
                                     playerPairs[playerCount].second));
       ++playerCount;
     }
   }
 
  private:
+  vector<Player*> player;
   vector<Player*> player;
   Pack pack;
   bool shuffle;
@@ -164,9 +203,20 @@ class Game {
   int orderUpPlayer;
   int trickCounter;
   Suit order_up_suit;
+  int onePoints;
+  int twoPoints;
+  int orderUpPlayer;
+  int trickCounter;
+  Suit order_up_suit;
   bool trumpMade = false;
 
   void reset_round() {
+    if (onePoints > twoPoints) {
+      ++team1;
+    }
+    else if (twoPoints > onePoints) {
+      ++team2;
+    }
     if (onePoints > twoPoints) {
       ++team1;
     }
@@ -187,8 +237,26 @@ class Game {
     else {
       return false;
     }
+    trumpMade = false;
+    trickCounter = 1;
+    onePoints = 0;
+    twoPoints = 0;
+  }
+
+  bool is_dealer(int i) {
+    if (i == dealer) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   
+  void shuffleDeck() {
+    if (shuffle) {
+      pack.shuffle();
+    }
+  };
   void shuffleDeck() {
     if (shuffle) {
       pack.shuffle();
@@ -197,26 +265,34 @@ class Game {
   void deal() {
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 1)%4]->add_card(pack.deal_one());
+      player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
       player[(dealer + 2)%4]->add_card(pack.deal_one());
+      player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
+      player[(dealer + 3)%4]->add_card(pack.deal_one());
       player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
       player[dealer]->add_card(pack.deal_one());
+      player[dealer]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
+      player[(dealer + 1)%4]->add_card(pack.deal_one());
       player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 2)%4]->add_card(pack.deal_one());
+      player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
       player[(dealer + 3)%4]->add_card(pack.deal_one());
+      player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
+      player[dealer]->add_card(pack.deal_one());
       player[dealer]->add_card(pack.deal_one());
     }
   }
@@ -292,6 +368,7 @@ class Game {
 
   void play_hand() {
     print_opening();
+    while (print_round()) {
     while (print_round()) {
       print_round();
     }
