@@ -37,6 +37,7 @@ TEST(test_player_get_name) {
     Card queen_of_spades(QUEEN, SPADES);
     Card ace_of_clubs(ACE, CLUBS);
     Card nine_of_diamonds(NINE, DIAMONDS);
+    Card king_of_diamonds(KING, DIAMONDS);
 
     Suit trump(CLUBS);
 
@@ -77,8 +78,15 @@ TEST(play_card_lowest_edge) {
     ASSERT_EQUAL(ten_of_clubs, player->play_card(jack_of_hearts, DIAMONDS));
     ASSERT_EQUAL(ten_of_clubs, player->play_card(ten_of_hearts, DIAMONDS));
     ASSERT_EQUAL(nine_of_diamonds, player->play_card(ten_of_hearts, CLUBS));
-    ASSERT_EQUAL(nine_of_diamonds, player->play_card(ten_of_hearts, SPADES));
-    ASSERT_EQUAL(nine_of_diamonds, player->play_card(ten_of_hearts, HEARTS));
+    ASSERT_EQUAL(nine_of_diamonds, player->play_card(jack_of_hearts, SPADES));
+    ASSERT_EQUAL(nine_of_diamonds, player->play_card(ace_of_hearts, HEARTS));
+    player->add_and_discard(nine_of_spades);
+    // ten_of_clubs, jack_of_diamonds, jack_of_spades,
+    // ten_of_spades, nine_of_spades
+    ASSERT_EQUAL(nine_of_spades, player->play_card(nine_of_hearts, CLUBS));
+    ASSERT_EQUAL(nine_of_spades, player->play_card(nine_of_hearts, DIAMONDS));
+    ASSERT_EQUAL(nine_of_spades, player->play_card(nine_of_hearts, HEARTS));
+    delete player;
 }
 
 // when there is a led suit card: 
@@ -132,12 +140,17 @@ TEST(test_make_trump_true) {
     player->add_card(jack_of_diamonds);
     player->add_card(jack_of_clubs);
     player->add_card(king_of_spades);
-    ASSERT_FALSE(player->make_trump(ace_of_spades, false, 2, trump));
+    player->add_card(nine_of_hearts);
+    // true because if hearts is made trump,
+    // and queen_of_hearts is face
+    // and jack_of_diamonds is left
+    ASSERT_TRUE(player->make_trump(ace_of_spades, false, 2, trump));
     ASSERT_TRUE(player->make_trump(ace_of_spades, true, 2, trump));
     cout << "(order_up_suit) Expected: Clubs, Actual: " << trump << endl;
     ASSERT_TRUE(player->make_trump(ace_of_spades, true, 1, trump));
     delete player;
 }
+
 TEST(test_make_trump_false) {
     Player * player = Player_factory("player", "Simple");
     player->add_card(nine_of_spades);
@@ -146,6 +159,37 @@ TEST(test_make_trump_false) {
     player->add_card(king_of_spades);
     ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 1, trump));
     ASSERT_TRUE(player->make_trump(nine_of_spades, false, 1, trump));
+    delete player;
+}
+
+TEST(test_make_trump_round_1) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(jack_of_spades);
+    player->add_card(queen_of_hearts);
+    player->add_card(king_of_diamonds);
+    player->add_card(jack_of_clubs);
+    player->add_card(ace_of_diamonds);
+    ASSERT_TRUE(player->make_trump(ten_of_clubs, false, 1, trump));
+    ASSERT_EQUAL(clubs, trump);
+    ASSERT_FALSE()
+    delete player;
+}
+
+TEST(test_make_trump_round_2) {
+    Player * player = Player_factory("player", "Simple");
+    player->add_card(queen_of_hearts);
+    player->add_card(jack_of_hearts);
+    player->add_card(king_of_clubs);
+    player->add_card(ace_of_spades);
+    player->add_card(king_of_diamonds);
+    ASSERT_TRUE(player->make_trump(ten_of_hearts, false, 2, trump));
+    ASSERT_EQUAL(DIAMONDS, trump);
+    ASSERT_TRUE(player->make_trump(queen_of_hearts, false, 2, trump));
+    ASSERT_EQUAL(DIAMONDS, trump);
+    player->add_and_discard(ten_of_spades);
+    ASSERT_FALSE(player->make_trump(ten_of_hearts, false, 2, trump));
+    ASSERT_TRUE(player->make_trump(king_of_diamonds, true, 2, trump));
+    ASSERT_EQUAL(SPADES, trump);
     delete player;
 }
 
@@ -158,9 +202,9 @@ TEST(test_add_and_discard) {
     ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 1, trump));
     player->add_and_discard(ace_of_hearts);
     ASSERT_TRUE(player->make_trump(queen_of_hearts, false, 1, trump));
-    ASSERT_FALSE(player->make_trump(ten_of_clubs, false, 1, trump))
+    ASSERT_FALSE(player->make_trump(ten_of_clubs, false, 1, trump));
     player->add_and_discard(king_of_clubs);
-    ASSERT_TRUE(player->make_trump(ten_of_clubs, false, 1, trump))
+    ASSERT_TRUE(player->make_trump(ten_of_clubs, false, 1, trump));
     delete player;
 }
 
@@ -175,8 +219,6 @@ TEST(test_lead_card_basic) {
     delete player;
 }
 
-
-
 TEST(test_lead_card_complex) {
     Player * player = Player_factory("player", "Simple");
     player->add_card(queen_of_hearts);
@@ -188,21 +230,6 @@ TEST(test_lead_card_complex) {
     //queen_of_hearts, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
     player->add_and_discard(nine_of_hearts);
-    /*
-    [0]:
-{rank:QUEEN, suit:HEARTS}
-[1]:
-{rank:JACK, suit:DIAMONDS}
-[2]:
-{rank:JACK, suit:CLUBS}
-[3]:
-{rank:KING, suit:HEARTS}
-[4]:
-{rank:TEN, suit:HEARTS}
-[5]:
-{rank:NINE, suit:HEARTS}
-
-    */
     // nine_of_hearts, ten_of_hearts, queen_of_hearts, 
     //jack_of_diamonds, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
