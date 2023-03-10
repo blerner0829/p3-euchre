@@ -266,7 +266,7 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
     return true;
   }
   else if (a.is_trump(trump) && b.is_trump(trump)) {
-    if (a.get_rank() < b.get_rank()) {
+    if (a < b) {
       return true;
     }
     else {
@@ -312,7 +312,7 @@ bool Card_less(const Card &a, const Card &b, const Card
     return false;
   }
   else if (a.is_trump(trump) && b.is_trump(trump)) {
-    if (a.get_rank() < b.get_rank()) {
+    if (a < b) {
       return true;
     }
     else {
@@ -331,8 +331,16 @@ bool Card_less(const Card &a, const Card &b, const Card
   else if ((a.get_suit() != led_suit) && (b.get_suit() == led_suit)) {
     return true;
   }
-  else if ((a.get_suit() == led_suit) && (b.get_suit() == led_suit)) {
+  else if (a.get_suit() == b.get_suit()) {
     if (a.get_rank() < b.get_rank()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  else if (a == b) {
+    if (a.get_suit() < b.get_suit()) {
       return true;
     }
     else {

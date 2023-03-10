@@ -47,80 +47,24 @@ class SimplePlayer: public Player {
       else {
         return false;
       }
-  }
+    }
   // if round 2
     else if (round == 2) {
-      numFaceAceLeft = 0;
-      int max = 0;
-      int previous = 0;
-      Card choice;
-      // determines the suit with the most face cards, 
-      // aces, and left_bowers, and records that number
-      // in round 2, the ordered up suit cannot be
-      //  the same suit as the upcard
-      for (int i = 0; i < hand.size(); ++i) {
-        for (int j = 0; j < hand.size(); ++j) {
-          if ((hand[i].get_suit() == hand[j].get_suit() 
-          || hand[j].is_left_bower(hand[i].get_suit()))
-          && hand[i].get_suit() != upcard.get_suit() 
-          && hand[j].is_face_or_ace()) {
-            ++previous;
-          }
-        }
-        if (previous > max) {
-          max = previous;
-          previous = 0;
-          choice = hand[i];
-        }
-        // this else if statement will make it
-        // so that if screw the dealer happens,
-        // then he'll pick his best card to be trump
-        else if (previous == max && Card_less(choice, hand[i], 
-                                              hand[i].get_suit())) {
-          max = previous;
-          previous = 0;
-          choice = hand[i];
-        }
-      }
-      numFaceAceLeft = max;
-      //FIXME possible bug: if no face cards choice is empty
-      if (numFaceAceLeft >= 2) {
-        order_up_suit = choice.get_suit();
-        return true;
-        }
-        // screw the dealer
-      else {
-        if (is_dealer == true) {
-            order_up_suit = choice.get_suit();
-            return true;
-          }
-          else {
-            return false;
-          }
-        } 
-    }
-    else {
-      return false;
-    }
-}
-// code that I'm too afraid to delete incase I got 
-// the specs wrong lets keep it here for
-  /*
     // players can order up any suit other than upcard suit
-    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-      if (hand[i].is_face_or_ace() && 
-        hand[i].get_suit() == Suit_next(upcard.get_suit())) {
-          ++numFaceAceLeft;
-          }
-          }
+      for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+        if (hand[i].is_face_or_ace() && 
+          hand[i].get_suit() == Suit_next(upcard.get_suit())) {
+            ++numFaceAceLeft;
+            }
+            }
 
-     if (numFaceAceLeft >= 2) {
-      order_up_suit = Suit_next(upcard.get_suit());
-      return true;
-          }
+      if (numFaceAceLeft >= 1) {
+        order_up_suit = Suit_next(upcard.get_suit());
+        return true;
+            }
 
       else {
-        if (is_dealer == true) {
+        if (is_dealer) {
           order_up_suit = Suit_next(upcard.get_suit());
           return true;
         }
@@ -129,11 +73,11 @@ class SimplePlayer: public Player {
         }
       }  
     }
-  else {
-    return false;
-  }
-} 
-*/
+    else {
+      return false;
+    }
+  } 
+
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
     hand.push_back(upcard);
@@ -189,12 +133,13 @@ class SimplePlayer: public Player {
       if (hand[i].get_suit() == led_card.get_suit()) {
         // if hand contains card of led suit, increments by 1
         ++count;
+        val = i;
       }
     }
     // if count > 0, plays highest card
     if (count > 0) {
     for (int i = 0; i < hand.size(); ++i) {
-      if (Card_less(hand[val], hand[i], led_card, trump)) {
+      if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit() == led_card.get_suit()) {
         val = i;
       } 
     }

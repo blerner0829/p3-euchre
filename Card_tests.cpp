@@ -34,6 +34,7 @@ Card ace_of_spades(ACE, SPADES);
     Card two_of_hearts(TWO, HEARTS);
     Card three_of_clubs(THREE, CLUBS);
     Card two_of_diamonds(TWO, DIAMONDS);
+    Card jack_of_spades(JACK, SPADES);
 
 TEST(test_card_ctor) {
     ASSERT_EQUAL(ACE, ace_of_hearts.get_rank());
@@ -47,6 +48,7 @@ TEST(tests_suit_trump) {
     ASSERT_EQUAL(SPADES, jack_of_clubs.get_suit(SPADES));
     ASSERT_EQUAL(DIAMONDS, two_of_diamonds.get_suit(DIAMONDS));
     ASSERT_EQUAL(SPADES, nine_of_spades.get_suit(DIAMONDS));
+    ASSERT_NOT_EQUAL(DIAMONDS, jack_of_spades.get_suit(SPADES));
 }
 
 TEST(tests_is_face) {
