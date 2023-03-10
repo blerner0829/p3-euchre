@@ -38,6 +38,7 @@ TEST(test_player_get_name) {
     Card ace_of_clubs(ACE, CLUBS);
     Card nine_of_diamonds(NINE, DIAMONDS);
     Card king_of_diamonds(KING, DIAMONDS);
+    Card ace_of_diamonds(ACE, DIAMONDS);
 
     Suit trump(CLUBS);
 
@@ -47,6 +48,13 @@ TEST(play_card_all_same) {
     for (int i = 0; i < 5; ++i) {
         player->add_card(ten_of_spades);
     }
+    ASSERT_FALSE(player->make_trump(king_of_spades, false, 1, trump));
+    ASSERT_FALSE(player->make_trump(nine_of_spades, true, 1, trump));
+    ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 2, trump));
+    ASSERT_FALSE(player->make_trump(king_of_spades, false, 2, trump));
+    ASSERT_TRUE(player->make_trump(ten_of_spades, true, 2, trump));
+    ASSERT_EQUAL(SPADES, trump);
+
     ASSERT_EQUAL(ten_of_spades, player->play_card(king_of_spades, SPADES));
     ASSERT_EQUAL(ten_of_spades, player->play_card(nine_of_spades, CLUBS));
     ASSERT_EQUAL(ten_of_spades, player->play_card(jack_of_clubs, SPADES));
@@ -170,8 +178,7 @@ TEST(test_make_trump_round_1) {
     player->add_card(jack_of_clubs);
     player->add_card(ace_of_diamonds);
     ASSERT_TRUE(player->make_trump(ten_of_clubs, false, 1, trump));
-    ASSERT_EQUAL(clubs, trump);
-    ASSERT_FALSE()
+    ASSERT_EQUAL(CLUBS, trump);
     delete player;
 }
 
@@ -250,3 +257,4 @@ TEST(test_lead_card_complex) {
 }
 
 TEST_MAIN()
+

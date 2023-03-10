@@ -6,101 +6,108 @@
 
 using namespace std;
 
+Card ace_of_spades(ACE, SPADES);
+    Card ten_of_hearts(TEN, HEARTS);
+    Card nine_of_spades(NINE, SPADES);
+    Card jack_of_diamonds(JACK, DIAMONDS);
+    Card king_of_clubs(KING, CLUBS);
+    Card jack_of_hearts(JACK, HEARTS);
+    Card queen_of_hearts(QUEEN, HEARTS);
+    Card king_of_spades(KING, SPADES);
+    Card jack_of_clubs(JACK, CLUBS);
+    Card ace_of_hearts(ACE, HEARTS);
+    Card ten_of_clubs(TEN, CLUBS);
+    Card king_of_hearts(KING, HEARTS);
+    Card nine_of_hearts(NINE, HEARTS);
+    Card jack_of_spades(JACK, SPADES);
+    Card ten_of_spades(TEN, SPADES);
+    Card ten_of_diamonds(TEN, DIAMONDS);
+    Card queen_of_clubs(QUEEN, CLUBS);
+    Card nine_of_clubs(NINE, CLUBS);
+    Card queen_of_spades(QUEEN, SPADES);
+    Card ace_of_clubs(ACE, CLUBS);
+    Card nine_of_diamonds(NINE, DIAMONDS);
+    Card king_of_diamonds(KING, DIAMONDS);
+    Card ace_of_diamonds(ACE, DIAMONDS);
+    Card queen_of_diamonds(QUEEN, DIAMONDS);
+    Card two_of_spades(TWO, SPADES);
+    Card two_of_hearts(TWO, HEARTS);
+    Card three_of_clubs(THREE, CLUBS);
+    Card two_of_diamonds(TWO, DIAMONDS);
 
 TEST(test_card_ctor) {
-    Card c(ACE, HEARTS);
-    ASSERT_EQUAL(ACE, c.get_rank());
-    ASSERT_EQUAL(HEARTS, c.get_suit());
+    ASSERT_EQUAL(ACE, ace_of_hearts.get_rank());
+    ASSERT_EQUAL(HEARTS, ace_of_hearts.get_suit());
 }
 
 TEST(tests_suit_trump) {
-    Card c(JACK, HEARTS);
-    ASSERT_EQUAL(DIAMONDS, c.get_suit(DIAMONDS));
-    Card c1(JACK, DIAMONDS);
-    ASSERT_EQUAL(HEARTS, c1.get_suit(HEARTS));
-    Card c2(JACK, SPADES);
-    ASSERT_EQUAL(CLUBS, c2.get_suit(CLUBS));
-    Card c3(JACK, CLUBS);
-    ASSERT_EQUAL(SPADES, c3.get_suit(SPADES));
-    Card c4(TWO, DIAMONDS);
-    ASSERT_EQUAL(DIAMONDS, c4.get_suit(DIAMONDS));
-    Card c5(NINE, SPADES);
-    ASSERT_EQUAL(SPADES, c5.get_suit(DIAMONDS));
+    ASSERT_EQUAL(DIAMONDS, jack_of_hearts.get_suit(DIAMONDS));
+    ASSERT_EQUAL(HEARTS, jack_of_diamonds.get_suit(HEARTS));
+    ASSERT_EQUAL(CLUBS, jack_of_spades.get_suit(CLUBS));
+    ASSERT_EQUAL(SPADES, jack_of_clubs.get_suit(SPADES));
+    ASSERT_EQUAL(DIAMONDS, two_of_diamonds.get_suit(DIAMONDS));
+    ASSERT_EQUAL(SPADES, nine_of_spades.get_suit(DIAMONDS));
 }
 
 TEST(tests_is_face) {
-    Card c(JACK, HEARTS);
-    ASSERT_TRUE(c.is_face_or_ace());
-    Card c1(QUEEN, SPADES);
-    ASSERT_TRUE(c1.is_face_or_ace());
-    Card c2(KING, CLUBS);
-    ASSERT_TRUE(c2.is_face_or_ace());
-    Card c3(ACE, DIAMONDS);
-    ASSERT_TRUE(c3.is_face_or_ace()); 
-    Card c4(TWO, HEARTS);
-    ASSERT_FALSE(c4.is_face_or_ace());
+    ASSERT_TRUE(jack_of_hearts.is_face_or_ace());
+    ASSERT_TRUE(queen_of_spades.is_face_or_ace());
+    ASSERT_TRUE(king_of_clubs.is_face_or_ace());
+    ASSERT_TRUE(ace_of_diamonds.is_face_or_ace()); 
+    ASSERT_FALSE(two_of_hearts.is_face_or_ace());
 }
 
 TEST(test_is_right_bower) {
-    Card c(JACK, HEARTS);
-    ASSERT_TRUE(c.is_right_bower(HEARTS));
-    ASSERT_FALSE(c.is_right_bower(DIAMONDS));
-    Card c1(QUEEN, DIAMONDS);
-    ASSERT_FALSE(c1.is_right_bower(DIAMONDS));
-    Card C2(JACK, DIAMONDS);
-    Card C3(JACK, CLUBS);
-    Card C4(JACK, SPADES);
-    ASSERT_TRUE(C2.is_right_bower(DIAMONDS));
-    ASSERT_TRUE(C3.is_right_bower(CLUBS));
-    ASSERT_TRUE(C4.is_right_bower(SPADES));
+    ASSERT_TRUE(jack_of_hearts.is_right_bower(HEARTS));
+    ASSERT_FALSE(jack_of_hearts.is_right_bower(DIAMONDS));
+    ASSERT_FALSE(queen_of_diamonds.is_right_bower(DIAMONDS));
+    ASSERT_TRUE(jack_of_diamonds.is_right_bower(DIAMONDS));
+    ASSERT_TRUE(jack_of_clubs.is_right_bower(CLUBS));
+    ASSERT_TRUE(jack_of_spades.is_right_bower(SPADES));
 }
 
 TEST(tests_is_left_bower) {
-    Card c(JACK, HEARTS);
-    ASSERT_TRUE(c.is_left_bower(DIAMONDS));
-    ASSERT_FALSE(c.is_left_bower(SPADES));
-    Card c1(JACK, DIAMONDS);
-    ASSERT_TRUE(c1.is_left_bower(HEARTS));
-    Card c2(JACK, SPADES);
-    ASSERT_TRUE(c2.is_left_bower(CLUBS));
-    Card c3(JACK, CLUBS);
-    ASSERT_TRUE(c3.is_left_bower(SPADES));
-    Card c4(ACE, HEARTS);
-    ASSERT_FALSE(c4.is_left_bower(DIAMONDS));
+    ASSERT_TRUE(jack_of_hearts.is_left_bower(DIAMONDS));
+    ASSERT_FALSE(jack_of_hearts.is_left_bower(SPADES));
+    ASSERT_TRUE(jack_of_diamonds.is_left_bower(HEARTS));
+    ASSERT_TRUE(jack_of_spades.is_left_bower(CLUBS));
+    ASSERT_TRUE(jack_of_clubs.is_left_bower(SPADES));
+    ASSERT_FALSE(ace_of_hearts.is_left_bower(DIAMONDS));
 }
 
 TEST(tests_is_trump) {
-    Card c(ACE, SPADES);
-    ASSERT_TRUE(c.is_trump(SPADES));
-    ASSERT_FALSE(c.is_trump(CLUBS));
-    Card c1(JACK, HEARTS);
-    ASSERT_TRUE(c1.is_trump(HEARTS));
-    ASSERT_TRUE(c1.is_trump(DIAMONDS));
-    ASSERT_FALSE(c1.is_trump(SPADES));
-    Card c2(THREE, CLUBS);
-    ASSERT_TRUE(c2.is_trump(CLUBS));
+    ASSERT_TRUE(ace_of_spades.is_trump(SPADES));
+    ASSERT_FALSE(ace_of_spades.is_trump(CLUBS));
+    ASSERT_TRUE(jack_of_hearts.is_trump(HEARTS));
+    ASSERT_TRUE(jack_of_hearts.is_trump(DIAMONDS));
+    ASSERT_FALSE(jack_of_hearts.is_trump(SPADES));
+    ASSERT_TRUE(three_of_clubs.is_trump(CLUBS));
 }
 
 TEST(tests_card_less) {
-    Card ace_of_spades = Card(ACE, SPADES);
-    Card two_of_spades = Card(TWO, SPADES);
-    Card king_of_hearts = Card(KING, HEARTS);
-    Card jack_of_spades = Card(JACK, SPADES);
-    Card jack_of_clubs = Card(JACK, CLUBS);
-    Card jack_of_hearts = Card(JACK, HEARTS);
+
     ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, SPADES));
     ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, SPADES));
     ASSERT_FALSE(Card_less(king_of_hearts, ace_of_spades, HEARTS));
     ASSERT_TRUE(Card_less(jack_of_clubs, jack_of_spades, SPADES));
     ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_spades, CLUBS));
+
+        ASSERT_FALSE(Card_less(ace_of_spades, ace_of_spades, SPADES));
+    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, CLUBS));
+    ASSERT_TRUE(Card_less(king_of_hearts, jack_of_spades, CLUBS));
+    ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_diamonds, DIAMONDS));
+    ASSERT_TRUE(Card_less(queen_of_diamonds, jack_of_hearts, HEARTS));
+    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, SPADES));
+    ASSERT_TRUE(Card_less(ten_of_hearts, king_of_hearts, HEARTS));
+    ASSERT_FALSE(Card_less(king_of_spades, nine_of_spades, SPADES));
+    ASSERT_FALSE(Card_less(ace_of_spades, king_of_diamonds, SPADES));
+    ASSERT_TRUE(Card_less(ten_of_clubs, jack_of_diamonds, DIAMONDS));
+
+    ASSERT_TRUE(Card_less(jack_of_clubs, queen_of_diamonds, HEARTS));
+    ASSERT_FALSE(Card_less(king_of_spades, nine_of_diamonds, CLUBS));
 }
 
 TEST(tests_card_less_led) {
-    Card ace_of_spades = Card(ACE, SPADES);
-    Card two_of_spades = Card(TWO, SPADES);
-    Card king_of_hearts = Card(KING, HEARTS);
-    Card ten_of_clubs = Card(TEN, CLUBS);
-
 
     ASSERT_FALSE(Card_less(king_of_hearts, ten_of_clubs, king_of_hearts, 
     DIAMONDS));
@@ -110,6 +117,26 @@ TEST(tests_card_less_led) {
     DIAMONDS));
     ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, two_of_spades, 
     DIAMONDS));
+
+    ASSERT_FALSE(Card_less(ace_of_spades, ace_of_spades, two_of_spades, SPADES));
+    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, ace_of_spades, CLUBS));
+    ASSERT_TRUE(Card_less(king_of_hearts, jack_of_spades, ten_of_clubs, CLUBS));
+    ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_diamonds, nine_of_spades, DIAMONDS));
+    ASSERT_TRUE(Card_less(queen_of_diamonds, jack_of_hearts, ace_of_spades, HEARTS));
+    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, king_of_hearts, SPADES));
+    ASSERT_TRUE(Card_less(ten_of_hearts, king_of_hearts, nine_of_clubs, HEARTS));
+    ASSERT_FALSE(Card_less(king_of_spades, nine_of_spades, ten_of_clubs, SPADES));
+    ASSERT_FALSE(Card_less(ace_of_spades, king_of_diamonds, queen_of_spades, SPADES));
+    ASSERT_TRUE(Card_less(ten_of_clubs, jack_of_diamonds, ten_of_hearts, DIAMONDS));
+
+    ASSERT_FALSE(Card_less(nine_of_spades, jack_of_diamonds, queen_of_spades, CLUBS));
+    ASSERT_TRUE(Card_less(king_of_diamonds, ace_of_hearts, ten_of_hearts, CLUBS));
+    ASSERT_TRUE(Card_less(nine_of_spades, ten_of_spades, king_of_spades, HEARTS));
+    ASSERT_FALSE(Card_less(king_of_clubs, queen_of_clubs, ten_of_clubs, DIAMONDS));
+
+    ASSERT_TRUE(Card_less(jack_of_clubs, queen_of_diamonds, ten_of_hearts, HEARTS));
+    ASSERT_FALSE(Card_less(king_of_spades, nine_of_diamonds, ten_of_clubs, CLUBS));
+
 }
 
 TEST_MAIN()
