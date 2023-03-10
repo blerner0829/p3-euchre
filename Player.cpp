@@ -127,16 +127,28 @@ class SimplePlayer: public Player {
 
   Card play_card(const Card &led_card, Suit trump) {
     //check for cards of led suit
-
-    int max = 0;
-    //for (int j = 0; j < hand.size(); ++j) {
+    int count = 0;
+    int val = 0;
     for (int i = 0; i < hand.size(); ++i) {
-      if (Card_less(hand[max], hand[i], led_card, trump)) {
-        max = i;
+      if (hand[i].get_suit() == led_card.get_suit()) {
+        ++count;
+      }
+    }
+    if (count > 0) {
+    for (int i = 0; i < hand.size(); ++i) {
+      if (Card_less(hand[val], hand[i], led_card, trump)) {
+        val = i;
       } 
     }
-    //}
-    return hand[max];
+    }
+    else {
+      for (int i = 0; i < hand.size(); ++i) {
+      if (Card_less(hand[i], hand[val], led_card, trump)) {
+        val = i;
+      } 
+    }
+    }
+    return hand[val];
     //if has, play highest of these
     //if not, play lowest card in hand
   }
