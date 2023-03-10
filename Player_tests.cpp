@@ -39,9 +39,8 @@ TEST(test_add_card) {
     player->add_card(jack_of_diamonds);
     player->add_card(jack_of_clubs);
     player->add_card(king_of_spades);
-    ASSERT_EQUAL(king_of_spades, player->play_card(ten_of_hearts, trump));
+    ASSERT_EQUAL(jack_of_clubs, player->play_card(ten_of_hearts, trump));
     delete player;
-
 }
 //use playcard to test add card
 TEST(test_make_trump_true) {
@@ -52,7 +51,7 @@ TEST(test_make_trump_true) {
     player->add_card(king_of_spades);
     ASSERT_FALSE(player->make_trump(ace_of_spades, false, 2, trump));
     ASSERT_TRUE(player->make_trump(ace_of_spades, true, 2, trump));
-    cout << "(order_up_suit) Expected: clubs, Actual: " << trump << endl;
+    cout << "(order_up_suit) Expected: Clubs, Actual: " << trump << endl;
     ASSERT_TRUE(player->make_trump(ace_of_spades, true, 1, trump));
     delete player;
 }
@@ -93,6 +92,8 @@ TEST(test_lead_card_basic) {
     delete player;
 }
 
+
+
 TEST(test_lead_card_complex) {
     Player * player = Player_factory("player", "Simple");
     player->add_card(queen_of_hearts);
@@ -100,7 +101,8 @@ TEST(test_lead_card_complex) {
     player->add_card(jack_of_clubs);
     player->add_card(king_of_hearts);
     player->add_card(ten_of_hearts);
-    // jack_of_clubs, jack_of_diamonds, ten_of_hearts, queen_of_hearts, king_of_hearts
+    // jack_of_clubs, jack_of_diamonds, ten_of_hearts, 
+    //queen_of_hearts, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
     player->add_and_discard(nine_of_hearts);
     /*
@@ -118,19 +120,22 @@ TEST(test_lead_card_complex) {
 {rank:NINE, suit:HEARTS}
 
     */
-    // nine_of_hearts, ten_of_hearts, queen_of_hearts, jack_of_diamonds, king_of_hearts
+    // nine_of_hearts, ten_of_hearts, queen_of_hearts, 
+    //jack_of_diamonds, king_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
     player->add_and_discard(jack_of_hearts);
-    // nine_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
+    // jack_of_hearts, ten_of_hearts, queen_of_hearts, 
+    //jack_of_diamonds, king_of_hearts
     ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
     ASSERT_EQUAL(king_of_hearts, player->lead_card(CLUBS));
-    // queen_of_hearts, jack_of_diamonds, jack_of_clubs, king_of_hearts, jack_of_hearts, ace_of_hearts
+    // jack of diamods, jack_of_clubs, jack_of_hearts, 
+    //queen_of_hearts, king_of_hearts
     player->add_and_discard(ace_of_hearts);
-    // ace_of_hearts, ten_of_hearts, jack_of_hearts, queen_of_hearts, king_of_hearts
-    ASSERT_EQUAL(jack_of_hearts, player->play_card(king_of_spades, HEARTS));
-    // queen_of_hearts, jack_of_clubs, king_of_hearts, jack_of_hearts, ace_of_hearts
+    // jack_of_hearts, queen_of_hearts, king_of_hearts, 
+    //ace_of_hearts, jack_of_diamonds
+    ASSERT_EQUAL(jack_of_hearts, player->play_card(nine_of_hearts, HEARTS));
     ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
-    //ASSERT_EQUAL(ace_of_hearts, player->lead_card(CLUBS));
+    ASSERT_EQUAL(ace_of_hearts, player->lead_card(CLUBS));
     delete player;
 }
 

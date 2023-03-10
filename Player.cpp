@@ -35,7 +35,8 @@ class SimplePlayer: public Player {
     // if round 1
     if (round == 1) {
       for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-        if ((upcard.get_suit() == hand[i].get_suit() && (hand[i].is_face_or_ace()))
+        if ((upcard.get_suit() == hand[i].get_suit() &&
+           (hand[i].is_face_or_ace()))
             || (hand[i].is_left_bower(upcard.get_suit()))) {
             ++numFaceAceLeft;
             }
@@ -80,8 +81,8 @@ class SimplePlayer: public Player {
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
     hand.push_back(upcard);
-
-    for (int i = 0; i < hand.size(); ++i) {
+    // find lowest value card
+    for (int i = 1; i < hand.size(); ++i) {
       if (Card_less(hand[i], hand[cardNum], upcard.get_suit())) {
         cardNum = i;
       }
@@ -110,6 +111,11 @@ class SimplePlayer: public Player {
     // should this one account for left bower 
     // or would the left bower count as a trump card?
     else {
+      for (int i = 0; i < hand.size(); ++i) {
+        if (!hand[i].is_trump(trump)) {
+          lead_card = hand[i];
+        }
+      }
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
         if (hand[i - 1] > lead_card && !hand[i - 1].is_trump(trump)) {
          lead_card = hand[i - 1];
@@ -122,17 +128,15 @@ class SimplePlayer: public Player {
   Card play_card(const Card &led_card, Suit trump) {
     //check for cards of led suit
 
-    Card previous = hand[0];
-    for (int j = 0; j < hand.size(); ++j) {
-      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (Card_less(previous, hand[i], led_card, trump)) {
-        } 
-        else {
-          previous = hand[i];
-        }
-     }
+    int max = 0;
+    //for (int j = 0; j < hand.size(); ++j) {
+    for (int i = 0; i < hand.size(); ++i) {
+      if (Card_less(hand[max], hand[i], led_card, trump)) {
+        max = i;
+      } 
     }
-    return previous;
+    //}
+    return hand[max];
     //if has, play highest of these
     //if not, play lowest card in hand
   }
@@ -160,7 +164,8 @@ class HumanPlayer: public Player {
     bool make_trump(const Card &upcard, bool is_dealer,
                           int round, Suit &order_up_suit) const {
       print_hand();
-      cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
+      cout << "Human player " << name 
+          << ", please enter a suit, or \"pass\":\n";
       string decision;
       cin >> decision;
 
@@ -179,7 +184,8 @@ class HumanPlayer: public Player {
       hand.push_back(upcard);
       print_hand();
       cout << "Discard upcard: [-1]\n";
-      cout << "Human player " << name << ", please select a card to discard:\n";
+      cout << "Human player " << name 
+          << ", please select a card to discard:\n";
       cin >> cardNum;
 
       if (cardNum == -1) {

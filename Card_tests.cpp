@@ -47,6 +47,12 @@ TEST(test_is_right_bower) {
     ASSERT_FALSE(c.is_right_bower(DIAMONDS));
     Card c1(QUEEN, DIAMONDS);
     ASSERT_FALSE(c1.is_right_bower(DIAMONDS));
+    Card C2(JACK, DIAMONDS);
+    Card C3(JACK, CLUBS);
+    Card C4(JACK, SPADES);
+    ASSERT_TRUE(C2.is_right_bower(DIAMONDS));
+    ASSERT_TRUE(C3.is_right_bower(CLUBS));
+    ASSERT_TRUE(C4.is_right_bower(SPADES));
 }
 
 TEST(tests_is_left_bower) {
@@ -79,9 +85,14 @@ TEST(tests_card_less) {
     Card ace_of_spades = Card(ACE, SPADES);
     Card two_of_spades = Card(TWO, SPADES);
     Card king_of_hearts = Card(KING, HEARTS);
+    Card jack_of_spades = Card(JACK, SPADES);
+    Card jack_of_clubs = Card(JACK, CLUBS);
+    Card jack_of_hearts = Card(JACK, HEARTS);
     ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, SPADES));
     ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, SPADES));
     ASSERT_FALSE(Card_less(king_of_hearts, ace_of_spades, HEARTS));
+    ASSERT_TRUE(Card_less(jack_of_clubs, jack_of_spades, SPADES));
+    ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_spades, CLUBS));
 }
 
 TEST(tests_card_less_led) {
@@ -89,10 +100,16 @@ TEST(tests_card_less_led) {
     Card two_of_spades = Card(TWO, SPADES);
     Card king_of_hearts = Card(KING, HEARTS);
     Card ten_of_clubs = Card(TEN, CLUBS);
-    ASSERT_FALSE(Card_less(king_of_hearts, ten_of_clubs, king_of_hearts, DIAMONDS));
-    ASSERT_FALSE(Card_less(ten_of_clubs, ace_of_spades, ten_of_clubs, DIAMONDS));
-    ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, two_of_spades, DIAMONDS));
-    ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, two_of_spades, DIAMONDS));
+
+
+    ASSERT_FALSE(Card_less(king_of_hearts, ten_of_clubs, king_of_hearts, 
+    DIAMONDS));
+    ASSERT_FALSE(Card_less(ten_of_clubs, ace_of_spades, ten_of_clubs, 
+    DIAMONDS));
+    ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, two_of_spades, 
+    DIAMONDS));
+    ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, two_of_spades, 
+    DIAMONDS));
 }
 
 TEST_MAIN()
