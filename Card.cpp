@@ -266,7 +266,7 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
     return true;
   }
   else if (a.is_trump(trump) && b.is_trump(trump)) {
-    if (a.get_rank() < b.get_rank()) {
+    if (a < b) {
       return true;
     }
     else {
@@ -312,7 +312,7 @@ bool Card_less(const Card &a, const Card &b, const Card
     return false;
   }
   else if (a.is_trump(trump) && b.is_trump(trump)) {
-    if (a.get_rank() < b.get_rank()) {
+    if (a < b) {
       return true;
     }
     else {
