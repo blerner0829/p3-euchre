@@ -245,9 +245,12 @@ Suit Suit_next(Suit suit) {
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
-// a = jack of diamodns b = queen of hearts trump = hearts
+// ace_of_spades < jack_of_diamonds when trump == clubs
 bool Card_less(const Card &a, const Card &b, Suit trump) {
   if (a == b && a.get_suit() == b.get_suit()) {
+    return false;
+  }
+  else if (a.is_right_bower(trump) && !b.is_right_bower(trump)) {
     return false;
   }
   else if (!a.is_right_bower(trump) && b.is_left_bower(trump)) {
@@ -286,11 +289,14 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
 
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
-//a = jack_of_diamonds b = king_of_hearts trump = hearts
+// a = jack of spades b = ace of spades trump = spades
 bool Card_less(const Card &a, const Card &b, const Card
              &led_card, Suit trump) {
   int led_suit = led_card.get_suit();
-  if (a == b) {
+  if (a == b && a.get_suit() == b.get_suit()) {
+    return false;
+  }
+  else if (a.is_right_bower(trump) && !b.is_right_bower(trump)) {
     return false;
   }
   else if (!a.is_right_bower(trump) && b.is_left_bower(trump)) {

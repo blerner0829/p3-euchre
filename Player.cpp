@@ -129,11 +129,13 @@ class SimplePlayer: public Player {
     //check for cards of led suit
     int count = 0;
     int val = 0;
-    for (int i = 0; i < hand.size(); ++i) {
+    for (int i = 0; i < hand.size() && count == 0; ++i) {
       if (hand[i].get_suit() == led_card.get_suit()) {
+        // if hand contains card of led suit, increments by 1
         ++count;
       }
     }
+    // if count > 0, plays highest card
     if (count > 0) {
     for (int i = 0; i < hand.size(); ++i) {
       if (Card_less(hand[val], hand[i], led_card, trump)) {
@@ -141,6 +143,7 @@ class SimplePlayer: public Player {
       } 
     }
     }
+    // if count == 0, plays lowest card
     else {
       for (int i = 0; i < hand.size(); ++i) {
       if (Card_less(hand[i], hand[val], led_card, trump)) {
