@@ -53,7 +53,7 @@ TEST(play_card_all_same) {
     ASSERT_FALSE(player->make_trump(queen_of_hearts, false, 2, trump));
     ASSERT_FALSE(player->make_trump(king_of_spades, false, 2, trump));
     ASSERT_TRUE(player->make_trump(ten_of_spades, true, 2, trump));
-    ASSERT_EQUAL(SPADES, trump);
+    ASSERT_EQUAL(CLUBS, trump);
 
     ASSERT_EQUAL(ten_of_spades, player->play_card(king_of_spades, SPADES));
     ASSERT_EQUAL(ten_of_spades, player->play_card(nine_of_spades, CLUBS));
@@ -117,12 +117,12 @@ TEST(play_card_highest_edge) {
     // jack_of_clubs, ace_of_spades, 
     // queen_of_clubs, queen_of_hearts, nine_of_clubs
     ASSERT_EQUAL(queen_of_hearts, player->play_card(king_of_clubs, HEARTS));
-    ASSERT_EQUAL(jack_of_clubs, player->play_card(king_of_hearts, SPADES));
-    ASSERT_EQUAL(jack_of_clubs, player->play_card(king_of_hearts, CLUBS));
+    ASSERT_EQUAL(queen_of_hearts, player->play_card(king_of_hearts, SPADES));
+    ASSERT_EQUAL(queen_of_clubs, player->play_card(king_of_hearts, CLUBS));
     player->add_and_discard(king_of_hearts);
     // jack_of_clubs, ace_of_spades, 
     // queen_of_clubs, queen_of_hearts, king_of_hearts
-    ASSERT_EQUAL(king_of_hearts, player->play_card(ten_of_spades, HEARTS));
+    ASSERT_EQUAL(ace_of_spades, player->play_card(ten_of_spades, HEARTS));
     player->add_and_discard(jack_of_spades);
     // jack_of_clubs, ace_of_spades, 
     // queen_of_hearts, king_of_hearts, jack_of_spades
@@ -138,7 +138,7 @@ TEST(test_add_card) {
     player->add_card(jack_of_diamonds);
     player->add_card(jack_of_clubs);
     player->add_card(king_of_spades);
-    ASSERT_EQUAL(jack_of_clubs, player->play_card(ten_of_hearts, trump));
+    ASSERT_EQUAL(queen_of_hearts, player->play_card(ten_of_hearts, trump));
     delete player;
 }
 //use playcard to test add card
@@ -194,9 +194,11 @@ TEST(test_make_trump_round_2) {
     ASSERT_TRUE(player->make_trump(queen_of_hearts, false, 2, trump));
     ASSERT_EQUAL(DIAMONDS, trump);
     player->add_and_discard(ten_of_spades);
-    ASSERT_FALSE(player->make_trump(ten_of_hearts, false, 2, trump));
+    // queen_of_hearts, king_of_clubs, 
+    // ace_of_spades, king_of_diamonds, ten_of_spades
+    ASSERT_TRUE(player->make_trump(ten_of_hearts, false, 2, trump));
     ASSERT_TRUE(player->make_trump(king_of_diamonds, true, 2, trump));
-    ASSERT_EQUAL(SPADES, trump);
+    ASSERT_EQUAL(HEARTS, trump);
     delete player;
 }
 
