@@ -181,7 +181,6 @@ class Game {
     int playerCount = 0;
     while (playerCount < 4) {
       player.push_back(Player_factory(playerPairs[playerCount].first,
-      player.push_back(Player_factory(playerPairs[playerCount].first,
                                     playerPairs[playerCount].second));
       ++playerCount;
     }
@@ -369,8 +368,9 @@ class Game {
   void play_hand() {
     print_opening();
     while (print_round()) {
-    while (print_round()) {
-      print_round();
+      while (print_round()) {
+        print_round();
+      }
     }
   }
 };
