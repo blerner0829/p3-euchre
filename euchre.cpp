@@ -20,7 +20,6 @@ class Game {
     team1 = 0;
     team2 = 0;
     trickCounter = 1;
-    trickCounter = 1;
   }
 
   void set_shuffle(string str) {
@@ -153,12 +152,6 @@ class Game {
     }
   }
 
-  void delete_players() {
-    for (int i = 0; i < 4; ++i) {
-      delete player[i];
-    }
-  }
-
   void play() {
     while ((team1 < maxPoints) && (team2 < maxPoints)){
       play_hand();
@@ -188,7 +181,6 @@ class Game {
 
  private:
   vector<Player*> player;
-  vector<Player*> player;
   Pack pack;
   bool shuffle;
   int maxPoints;
@@ -197,11 +189,6 @@ class Game {
   int round;
   int team1;
   int team2;
-  int onePoints;
-  int twoPoints;
-  int orderUpPlayer;
-  int trickCounter;
-  Suit order_up_suit;
   int onePoints;
   int twoPoints;
   int orderUpPlayer;
@@ -236,19 +223,6 @@ class Game {
     else {
       return false;
     }
-    trumpMade = false;
-    trickCounter = 1;
-    onePoints = 0;
-    twoPoints = 0;
-  }
-
-  bool is_dealer(int i) {
-    if (i == dealer) {
-      return true;
-    }
-    else {
-      return false;
-    }
   }
   
   void shuffleDeck() {
@@ -256,11 +230,7 @@ class Game {
       pack.shuffle();
     }
   };
-  void shuffleDeck() {
-    if (shuffle) {
-      pack.shuffle();
-    }
-  };
+  
   void deal() {
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 1)%4]->add_card(pack.deal_one());
