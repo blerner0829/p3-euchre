@@ -15,7 +15,7 @@ std::ostream & operator<<(std::ostream &os, const Player &p) {
 class SimplePlayer: public Player {
  public:
 
-  SimplePlayer(string name_in) 
+  SimplePlayer(string name_in)
   : name(name_in) {}
 
   const string & get_name() const {
@@ -52,7 +52,7 @@ class SimplePlayer: public Player {
     else if (round == 2) {
     // players can order up any suit other than upcard suit
       for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-        if (hand[i].is_face_or_ace() && 
+        if (hand[i].is_face_or_ace() &&
           hand[i].get_suit() == Suit_next(upcard.get_suit())) {
             ++numFaceAceLeft;
             }
@@ -71,12 +71,12 @@ class SimplePlayer: public Player {
         else {
           return false;
         }
-      }  
+      }
     }
     else {
       return false;
     }
-  } 
+  }
 
   void add_and_discard(const Card &upcard) {
     int cardNum = 0;
@@ -91,8 +91,8 @@ class SimplePlayer: public Player {
   }
 
   Card lead_card(Suit trump) {
-    Card lead_card = hand[1];
     int trump_count = 0;
+    int val = 0;
     //checks if there is at least one card of non trump
     for (int i = 0; i < MAX_HAND_SIZE; ++i) {
       if (hand[i].is_trump(trump)) {
@@ -100,29 +100,30 @@ class SimplePlayer: public Player {
       }
     }
     // chooses lead card for all trump
-    if (trump_count == 5) { 
+    if (trump_count == 5) {
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (Card_less(lead_card, hand[i - 1], trump)) {
-          lead_card = hand[i - 1];
+        if (Card_less(hand[val], hand[i - 1], trump)) {
+          val = i - 1;
         }
       }
     }
     // chooses lead card for when it's not all trump
-    // should this one account for left bower 
+    // should this one account for left bower
     // or would the left bower count as a trump card?
     else {
       for (int i = 0; i < hand.size(); ++i) {
         if (!hand[i].is_trump(trump)) {
-          lead_card = hand[i];
+          val = i;
         }
       }
       for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (hand[i - 1] > lead_card && !hand[i - 1].is_trump(trump)) {
-         lead_card = hand[i - 1];
+        if (hand[i - 1] > hand[val] && !hand[i - 1].is_trump(trump)) {
+            val = i - 1;
         }
       }
     }
-    return lead_card;
+      hand.erase(hand.begin() + val);
+    return hand[val];
   }
 
   Card play_card(const Card &led_card, Suit trump) {
@@ -141,7 +142,7 @@ class SimplePlayer: public Player {
     for (int i = 0; i < hand.size(); ++i) {
       if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit() == led_card.get_suit()) {
         val = i;
-      } 
+      }
     }
     }
     // if count == 0, plays lowest card
@@ -149,9 +150,10 @@ class SimplePlayer: public Player {
       for (int i = 0; i < hand.size(); ++i) {
       if (Card_less(hand[i], hand[val], led_card, trump)) {
         val = i;
-      } 
+      }
     }
     }
+    hand.erase(hand.begin() + val);
     return hand[val];
     //if has, play highest of these
     //if not, play lowest card in hand
@@ -166,7 +168,7 @@ class SimplePlayer: public Player {
 class HumanPlayer: public Player {
   public:
 
-    HumanPlayer(string name_in) 
+    HumanPlayer(string name_in)
     : name(name_in) {}
 
     const string & get_name() const {
@@ -180,7 +182,7 @@ class HumanPlayer: public Player {
     bool make_trump(const Card &upcard, bool is_dealer,
                           int round, Suit &order_up_suit) const {
       print_hand();
-      cout << "Human player " << name 
+      cout << "Human player " << name
           << ", please enter a suit, or \"pass\":\n";
       string decision;
       cin >> decision;
@@ -200,7 +202,7 @@ class HumanPlayer: public Player {
       hand.push_back(upcard);
       print_hand();
       cout << "Discard upcard: [-1]\n";
-      cout << "Human player " << name 
+      cout << "Human player " << name
           << ", please select a card to discard:\n";
       cin >> cardNum;
 
@@ -244,9 +246,9 @@ class HumanPlayer: public Player {
   }
 };
 
-Player * Player_factory(const std::string &name, 
+Player * Player_factory(const std::string &name,
                         const std::string &strategy) {
-  // We need to check the value of strategy and return 
+  // We need to check the value of strategy and return
   // the corresponding player type.
   if (strategy == "Simple") {
     return new SimplePlayer(name);
