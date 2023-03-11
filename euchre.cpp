@@ -35,11 +35,10 @@ class Game {
   void print_opening() {
     cout << "Hand " << handNum << endl;
     cout << *player[dealer] << " deals" << endl;
-    cout << *player[dealer] << " deals" << endl;
     deal();
     cout << pack.deal_one() << " turned up" << endl;
     ++handNum;
-    if (dealer < 4) {
+    if ((round > 0) && (dealer < 3)) {
       ++dealer;
     }
     else {
@@ -54,11 +53,6 @@ class Game {
           make_trump(i);
         }
       }
-      while (!trumpMade) {
-        for (int i = dealer + 1; i < dealer + 5; ++i) {
-          make_trump(i);
-        }
-      }
       ++round;
       return true;
     }
@@ -67,16 +61,10 @@ class Game {
         play_trick();
       }
       else {
-        for (int i = dealer + 1; i < dealer + 5; ++i) {
-          make_trump(i);
-        }
-      }
-      if (trumpMade) {
-        play_trick();
-      }
-      else {
-        for (int i = dealer + 1; i < dealer + 5; ++i) {
-          make_trump(i);
+        while (!trumpMade) {
+          for (int i = dealer + 1; i < dealer + 5; ++i) {
+            make_trump(i);
+          }
         }
       }
       //if round 1 either play a normal hand (1st card) 
@@ -94,11 +82,11 @@ class Game {
         reset_round();
         return false;
       }
-      //if round 2 either play normal hand (1st card if round 1 trump was made,
+      //if round 2 either play normal hand (1st card if round 1
+      // trump was made,
               //2nd if made round 0) OR discard hand (redeal, start new hand)
     }
     else if (round == 3) {
-      play_trick();
       play_trick();
       ++round;
       return true;
@@ -106,28 +94,17 @@ class Game {
     }
     else if (round == 4) {
       play_trick();
-      play_trick();
       ++round;
       return true;
       //if round 4 play normal hand (3rd or 4th)
     }
     else if (round == 5) {
       play_trick();
-      play_trick();
       ++round;
       return true;
       //if round 5 play normal hand (4th or 5th)
     }
     else if (round == 6) {
-      if (trickCounter == 5) {
-        play_trick();
-        ++round;
-        return true;
-      }
-      else {
-        reset_round();
-        return false;
-      }
       if (trickCounter == 5) {
         play_trick();
         ++round;
@@ -159,12 +136,8 @@ class Game {
     if (team1 >= maxPoints) {
       cout << player[0]->get_name() << " and " 
            << player[2]->get_name() << " win!";
-      cout << player[0]->get_name() << " and " 
-           << player[2]->get_name() << " win!";
     }
     else if (team2 >= maxPoints) {
-      cout << player[1]->get_name() << " and " 
-           << player[3]->get_name() << " win!";
       cout << player[1]->get_name() << " and " 
            << player[3]->get_name() << " win!";
     }
@@ -203,12 +176,6 @@ class Game {
     else if (twoPoints > onePoints) {
       ++team2;
     }
-    if (onePoints > twoPoints) {
-      ++team1;
-    }
-    else if (twoPoints > onePoints) {
-      ++team2;
-    }
     round = 0;
     trumpMade = false;
     trickCounter = 1;
@@ -230,52 +197,43 @@ class Game {
       pack.shuffle();
     }
   };
-  
   void deal() {
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 1)%4]->add_card(pack.deal_one());
-      player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[(dealer + 2)%4]->add_card(pack.deal_one());
       player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
       player[(dealer + 3)%4]->add_card(pack.deal_one());
-      player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
-      player[dealer]->add_card(pack.deal_one());
       player[dealer]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
       player[(dealer + 1)%4]->add_card(pack.deal_one());
-      player[(dealer + 1)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
-      player[(dealer + 2)%4]->add_card(pack.deal_one());
       player[(dealer + 2)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 2; ++i) {
       player[(dealer + 3)%4]->add_card(pack.deal_one());
-      player[(dealer + 3)%4]->add_card(pack.deal_one());
     }
     for (int i = 0; i < 3; ++i) {
-      player[dealer]->add_card(pack.deal_one());
       player[dealer]->add_card(pack.deal_one());
     }
   }
   void make_trump(int i) {
     Card upCard = pack.deal_one();
-    if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4),
-                                     round, order_up_suit)) {
+    if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4), 
+        round, order_up_suit)) {
         cout << player[i % 4]->get_name() << " passes" << endl;
       }
     else {
-      trumpMade = player[i % 4]->make_trump(upCard, is_dealer(i % 4),
-                                           round, order_up_suit);
+      trumpMade = player[i % 4]->make_trump(upCard, 
+      is_dealer(i % 4), round, order_up_suit);
       cout << player[i % 4]->get_name() << " orders up " 
-                                        << order_up_suit << endl;
+          << order_up_suit << endl;
       orderUpPlayer = i % 4;
     }
   }
@@ -296,14 +254,14 @@ class Game {
        player[(orderUpPlayer + 3) % 4]->get_name()}
     };
     
-    cout << trickInfo[0].second << " led by "
-         << trickInfo[0].first << endl;
-    cout << trickInfo[1].second << " played by " 
-         << trickInfo[1].first << endl;
-    cout << trickInfo[2].second << " played by " 
-         << trickInfo[2].first << endl;
-    cout << trickInfo[3].second << " played by " 
-         << trickInfo[3].first << endl;
+    cout << trickInfo[0].first << " led by "
+         << trickInfo[0].second << endl;
+    cout << trickInfo[1].first << " played by " 
+         << trickInfo[1].second << endl;
+    cout << trickInfo[2].first << " played by " 
+         << trickInfo[2].second << endl;
+    cout << trickInfo[3].first << " played by " 
+         << trickInfo[3].second << endl;
 
     
 
@@ -311,8 +269,8 @@ class Game {
     string winningPlayer = "";
     
     for (int i = 1; i < 4; ++i) {
-      if (Card_less(cardGreatest, trickInfo[i % 4].first,
-                      trickInfo[0].first, order_up_suit)) {
+      if (Card_less(cardGreatest, trickInfo[i % 4].first, 
+      trickInfo[0].first, order_up_suit)) {
         cardGreatest = trickInfo[i % 4].first;
        }
     }
@@ -338,9 +296,7 @@ class Game {
   void play_hand() {
     print_opening();
     while (print_round()) {
-      while (print_round()) {
-        print_round();
-      }
+      print_round();
     }
   }
 };
@@ -354,7 +310,7 @@ int main(int argc, char **argv) {
     {string(argv[10]), string(argv[11])}
   };
   // Read command line args and check for errors
-  for (int i = 0; i < argc; ++i){
+  for (int i = 0; i < argc; ++i) {
     cout << argv[i] << " ";
   }
 
