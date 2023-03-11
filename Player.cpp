@@ -111,19 +111,17 @@ class SimplePlayer: public Player {
     // should this one account for left bower
     // or would the left bower count as a trump card?
     else {
-      for (int i = 0; i < hand.size(); ++i) {
-        if (!hand[i].is_trump(trump)) {
-          val = i;
-        }
-      }
-      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
-        if (hand[i - 1] > hand[val] && !hand[i - 1].is_trump(trump)) {
-            val = i - 1;
+      for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+        for (int j = i + 1; j < MAX_HAND_SIZE; ++j) {
+          if (Card_less(hand[i],hand[j],trump) && !hand[j].is_trump(trump)) {
+            val = j;
+          }
         }
       }
     }
-      hand.erase(hand.begin() + val);
-    return hand[val];
+    Card erasedCard = hand[val] ;
+    hand.erase(hand.begin() + val);
+    return erasedCard;
   }
 
   Card play_card(const Card &led_card, Suit trump) {
@@ -153,8 +151,9 @@ class SimplePlayer: public Player {
       }
     }
     }
+    Card erasedCard = hand[val] ;
     hand.erase(hand.begin() + val);
-    return hand[val];
+    return erasedCard;
     //if has, play highest of these
     //if not, play lowest card in hand
   }

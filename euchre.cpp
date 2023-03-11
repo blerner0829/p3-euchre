@@ -19,7 +19,10 @@ class Game {
     round = 0;
     team1 = 0;
     team2 = 0;
+    onePoints = 0;
+    twoPoints = 0;
     trickCounter = 1;
+    trumpRound = 0;
   }
 
   void set_shuffle(string str) {
@@ -36,7 +39,8 @@ class Game {
     cout << "Hand " << handNum << endl;
     cout << *player[dealer] << " deals" << endl;
     deal();
-    cout << pack.deal_one() << " turned up" << endl;
+    upCard = pack.deal_one();
+    cout << upCard << " turned up" << endl;
     ++handNum;
     if ((round > 0) && (dealer < 3)) {
       ++dealer;
@@ -48,11 +52,17 @@ class Game {
 
   bool print_round() {
     if (round == 0) {
-      while (!trumpMade) {
-        for (int i = dealer + 1; i < dealer + 5; ++i) {
-          make_trump(i);
+      for (int i = dealer + 1; i < dealer + 5;) {
+          while ((!trumpMade) && (trumpRound < 4)) {
+            make_trump(i);
+            ++trumpRound;
+            ++i;
+          }
+            if ((trumpMade)|| trumpRound >= 4) {
+              break; // exit the loop if the condition becomes false
+            }
         }
-      }
+      trumpRound = 0;
       ++round;
       return true;
     }
@@ -61,14 +71,20 @@ class Game {
         play_trick();
       }
       else {
-        while (!trumpMade) {
-          for (int i = dealer + 1; i < dealer + 5; ++i) {
+        for (int i = dealer + 1; i < dealer + 5;) {
+          while ((!trumpMade) && (trumpRound < 4)) {
             make_trump(i);
+            ++trumpRound;
+            ++i;
           }
+          if ((trumpMade) || trumpRound >= 4) {
+              break; // exit the loop if the condition becomes false
+            }
         }
       }
       //if round 1 either play a normal hand (1st card) 
       //OR if trump wasn't chosen choose trump
+      trumpRound = 0;
       ++round;
       return true;
     }
@@ -155,6 +171,7 @@ class Game {
  private:
   vector<Player*> player;
   Pack pack;
+  Card upCard;
   bool shuffle;
   int maxPoints;
   int handNum;
@@ -168,6 +185,7 @@ class Game {
   int trickCounter;
   Suit order_up_suit;
   bool trumpMade = false;
+  int trumpRound;
 
   void reset_round() {
     if (onePoints > twoPoints) {
@@ -224,33 +242,32 @@ class Game {
     }
   }
   void make_trump(int i) {
-    Card upCard = pack.deal_one();
     if (!player[i % 4]->make_trump(upCard, is_dealer(i % 4), 
-        round, order_up_suit)) {
+        (round + 1), order_up_suit)) {
         cout << player[i % 4]->get_name() << " passes" << endl;
       }
     else {
-      trumpMade = player[i % 4]->make_trump(upCard, 
+      trumpMade = true;
+      player[i % 4]->make_trump(upCard, 
       is_dealer(i % 4), round, order_up_suit);
       cout << player[i % 4]->get_name() << " orders up " 
           << order_up_suit << endl;
+      player[i % 4]->add_and_discard(upCard);
       orderUpPlayer = i % 4;
     }
   }
 
   void play_trick() {
     Card cardGreatest;
+    Card ledCard = player[orderUpPlayer]->lead_card(order_up_suit);
     vector<pair<Card, string>> trickInfo {
-      {player[orderUpPlayer]->lead_card(order_up_suit),
+      {ledCard,
        player[orderUpPlayer]->get_name()},
-      {player[(orderUpPlayer + 1) % 4]->play_card(player[orderUpPlayer]->
-       lead_card(order_up_suit), order_up_suit),
+      {player[(orderUpPlayer + 1) % 4]->play_card(ledCard, order_up_suit),
        player[(orderUpPlayer + 1) % 4]->get_name()},
-      {player[(orderUpPlayer + 2) % 4]->play_card(player[orderUpPlayer]->
-       lead_card(order_up_suit), order_up_suit),
+      {player[(orderUpPlayer + 2) % 4]->play_card(ledCard, order_up_suit),
        player[(orderUpPlayer + 2) % 4]->get_name()},
-      {player[(orderUpPlayer + 3) % 4]->play_card(player[orderUpPlayer]->
-       lead_card(order_up_suit), order_up_suit),
+      {player[(orderUpPlayer + 3) % 4]->play_card(ledCard, order_up_suit),
        player[(orderUpPlayer + 3) % 4]->get_name()}
     };
     
