@@ -82,11 +82,14 @@ class SimplePlayer: public Player {
     int cardNum = 0;
     hand.push_back(upcard);
     // find lowest value card
-    for (int i = 1; i < hand.size(); ++i) {
-      if (Card_less(hand[i], hand[cardNum], upcard.get_suit())) {
-        cardNum = i;
+    for (int i = 0; i < hand.size(); ++i) {
+        for (int j = i + 1; j < hand.size(); ++j) {
+          if (Card_less(hand[i],hand[j],upcard.get_suit()) && 
+             !hand[j].is_trump(upcard.get_suit())) {
+            cardNum = i;
+          }
+        }
       }
-    }
     hand.erase(hand.begin() + cardNum);
   }
 
@@ -94,16 +97,24 @@ class SimplePlayer: public Player {
     int trump_count = 0;
     int val = 0;
     //checks if there is at least one card of non trump
-    for (int i = 0; i < MAX_HAND_SIZE; ++i) {
+    for (int i = 0; i < hand.size(); ++i) {
       if (hand[i].is_trump(trump)) {
         ++trump_count;
       }
     }
     // chooses lead card for all trump
-    if (trump_count == 5) {
-      for (int i = 1; i < MAX_HAND_SIZE; ++i) {
+    if (trump_count == hand.size()) {
+      for (int i = 1; i < hand.size(); ++i) {
         if (Card_less(hand[val], hand[i - 1], trump)) {
           val = i - 1;
+        }
+      }
+    }
+
+    else if (trump_count == hand.size() - 1) {
+      for (int i = 0; i < hand.size(); ++i) {
+        if (!hand[i].is_trump(trump)) {
+          val = i;
         }
       }
     }
@@ -111,8 +122,8 @@ class SimplePlayer: public Player {
     // should this one account for left bower
     // or would the left bower count as a trump card?
     else {
-      for (int i = 0; i < MAX_HAND_SIZE; ++i) {
-        for (int j = i + 1; j < MAX_HAND_SIZE; ++j) {
+      for (int i = 0; i < hand.size(); ++i) {
+        for (int j = i + 1; j < hand.size(); ++j) {
           if (Card_less(hand[i],hand[j],trump) && !hand[j].is_trump(trump)) {
             val = j;
           }
