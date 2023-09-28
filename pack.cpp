@@ -1,5 +1,5 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
-#include "Pack.h"
+#include "Pack.hpp"
 // EFFECTS: Initializes the Pack to be in the following standard order:
   //          the cards of the lowest suit arranged from lowest rank to
   //   /       highest rank, followed by the cards of the next lowest suit
