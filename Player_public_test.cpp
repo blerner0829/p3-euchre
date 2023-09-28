@@ -8,9 +8,9 @@
  * 2021-03-12
  */
 
-#include "Player.h"
-#include "Card.h"
-#include "unit_test_framework.h"
+#include "Player.hpp"
+#include "Card.hpp"
+#include "unit_test_framework.hpp"
 #include <sstream>
 using namespace std;
 

@@ -1,8 +1,8 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 
 #include <sstream>
-#include "unit_test_framework.h"
-#include "Card.h"
+#include "unit_test_framework.hpp"
+#include "Card.hpp"
 
 using namespace std;
 
