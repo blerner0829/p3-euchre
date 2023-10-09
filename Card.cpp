@@ -282,7 +282,10 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
   else if (a < b) {
     return true;
   }
-  else {
+  else if ((a == b) && (a.get_suit() < b.get_suit())){
+    return true;
+  }
+  else{
     return false;
   }
 }

@@ -161,19 +161,29 @@ class SimplePlayer: public Player {
   Card play_card(const Card &led_card, Suit trump) {
     //check for cards of led suit
     assert(hand.size() > 0);
-    int count = 0;
+    bool count = false;
     int val = 0;
-    for (int i = 0; i < hand.size(); ++i) {
-      if (hand[i].get_suit() == led_card.get_suit()) {
-        // if hand contains card of led suit, increments by 1
-        ++count;
-        //cout << "count: " << count << endl;
-      }
-    }
-    // if count > 0, plays highest card
-    if (count > 0) {
       for (int i = 0; i < hand.size(); ++i) {
-        if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit() == led_card.get_suit()) {
+        if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
+          // if hand contains card of led suit, count is true
+          count = true;
+          break;
+        }
+      }
+
+    // deals with edge case in which hand[0] is of trump suit which would cause
+    // the value of hand[0] to always exceed the cards of led card suit
+    if (count && (val == 0)) {
+        for (int i = 0; i < hand.size(); ++i) {
+          if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
+            val = i;
+          }
+        }
+    }
+    // if count, plays highest card of led suit
+    if (count) {
+      for (int i = 0; i < hand.size(); ++i) {
+        if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit(trump) == led_card.get_suit(trump)) {
           val = i;
         }
       }
