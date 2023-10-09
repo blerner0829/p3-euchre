@@ -36,8 +36,30 @@ Card two_of_diamonds(TWO, DIAMONDS);
 Card jack_of_spades(JACK, SPADES);
 
 TEST(test_card_ctor) {
-    ASSERT_EQUAL(ACE, ace_of_hearts.get_rank());
-    ASSERT_EQUAL(HEARTS, ace_of_hearts.get_suit());
+    Card card;
+    ASSERT_EQUAL(SPADES, card.get_suit());
+    ASSERT_EQUAL(TWO, card.get_rank());
+}
+
+TEST(test_card_ctor_parameters) {
+    Card card(TWO, SPADES);
+    ASSERT_EQUAL(SPADES, card.get_suit());
+    ASSERT_EQUAL(TWO, card.get_rank());
+
+    Card cardTwo(TEN, CLUBS);
+    ASSERT_EQUAL(CLUBS, cardTwo.get_suit());
+    ASSERT_EQUAL(TEN, cardTwo.get_rank());
+
+}
+
+TEST(test_suit) {
+    ASSERT_EQUAL(DIAMONDS, jack_of_hearts.get_suit());
+    ASSERT_EQUAL(HEARTS, jack_of_diamonds.get_suit());
+    ASSERT_EQUAL(CLUBS, jack_of_spades.get_suit());
+    ASSERT_EQUAL(SPADES, jack_of_clubs.get_suit());
+    ASSERT_EQUAL(DIAMONDS, two_of_diamonds.get_suit());
+    ASSERT_EQUAL(SPADES, nine_of_spades.get_suit());
+    ASSERT_NOT_EQUAL(DIAMONDS, jack_of_spades.get_suit());
 }
 
 TEST(tests_suit_trump) {
@@ -93,25 +115,49 @@ TEST(test_suit_next) {
 }
 
 TEST(tests_card_less) {
-    ASSERT_TRUE(Card_less(two_of_spades, ace_of_spades, SPADES));
-    ASSERT_FALSE(Card_less(ace_of_spades, two_of_spades, SPADES));
-    ASSERT_FALSE(Card_less(king_of_hearts, ace_of_spades, HEARTS));
-    ASSERT_TRUE(Card_less(jack_of_clubs, jack_of_spades, SPADES));
-    ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_spades, CLUBS));
+    // Test Case 1: Cards are equal and have the same suit
+    Card card1(TWO, SPADES);
+    Card card2(TWO, SPADES);
+    Suit trumpSuit = HEARTS;
+    ASSERT_FALSE(Card_less(card1, card2, trumpSuit));
 
-    ASSERT_FALSE(Card_less(ace_of_spades, ace_of_spades, SPADES));
-    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, CLUBS));
-    ASSERT_TRUE(Card_less(king_of_hearts, jack_of_spades, CLUBS));
-    ASSERT_TRUE(Card_less(jack_of_hearts, jack_of_diamonds, DIAMONDS));
-    ASSERT_TRUE(Card_less(queen_of_diamonds, jack_of_hearts, HEARTS));
-    ASSERT_FALSE(Card_less(jack_of_clubs, queen_of_clubs, SPADES));
-    ASSERT_TRUE(Card_less(ten_of_hearts, king_of_hearts, HEARTS));
-    ASSERT_FALSE(Card_less(king_of_spades, nine_of_spades, SPADES));
-    ASSERT_FALSE(Card_less(ace_of_spades, king_of_diamonds, SPADES));
-    ASSERT_TRUE(Card_less(ten_of_clubs, jack_of_diamonds, DIAMONDS));
+    // Test Case 2: a is right bower, b is not
+    Card rightBower(JACK, trumpSuit);
+    Card notRightBower(TEN, CLUBS);
+    ASSERT_FALSE(Card_less(rightBower, notRightBower, trumpSuit));
 
-    ASSERT_TRUE(Card_less(jack_of_clubs, queen_of_diamonds, HEARTS));
-    ASSERT_FALSE(Card_less(king_of_spades, nine_of_diamonds, CLUBS));
+    // Test Case 3: a is not right bower, b is left bower
+    Card leftBower(JACK, DIAMONDS);
+    ASSERT_TRUE(Card_less(card1, leftBower, trumpSuit));
+
+    // Test Case 4: a is left bower, b is right bower
+    ASSERT_TRUE(Card_less(leftBower, rightBower, trumpSuit));
+
+    // Test Case 5: a is left bower, b is not right bower
+    ASSERT_FALSE(Card_less(leftBower, notRightBower, trumpSuit));
+
+    // Test Case 6: a is not right bower, b is right bower
+    ASSERT_TRUE(Card_less(notRightBower, rightBower, trumpSuit));
+
+    // Test Case 7: a and b are both trump, a < b
+    Card trumpCard1(QUEEN, trumpSuit);
+    Card trumpCard2(KING, trumpSuit);
+    ASSERT_TRUE(Card_less(trumpCard1, trumpCard2, trumpSuit));
+
+    // Test Case 8: a is trump, b is not
+    Card nonTrumpCard(TEN, CLUBS);
+    ASSERT_FALSE(Card_less(trumpCard1, nonTrumpCard, trumpSuit));
+
+    // Test Case 9: a is not trump, b is trump
+    ASSERT_TRUE(Card_less(nonTrumpCard, trumpCard1, trumpSuit));
+
+    // Test Case 10: a < b
+    Card lowCard(TWO, HEARTS);
+    Card highCard(ACE, DIAMONDS);
+    ASSERT_TRUE(Card_less(lowCard, highCard, trumpSuit));
+
+    // Test Case 11: a >= b
+    ASSERT_FALSE(Card_less(highCard, lowCard, trumpSuit));
 }
 
 TEST(tests_card_less_led) {
