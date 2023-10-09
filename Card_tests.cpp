@@ -53,10 +53,10 @@ TEST(test_card_ctor_parameters) {
 }
 
 TEST(test_suit) {
-    ASSERT_EQUAL(DIAMONDS, jack_of_hearts.get_suit());
-    ASSERT_EQUAL(HEARTS, jack_of_diamonds.get_suit());
-    ASSERT_EQUAL(CLUBS, jack_of_spades.get_suit());
-    ASSERT_EQUAL(SPADES, jack_of_clubs.get_suit());
+    ASSERT_EQUAL(HEARTS, jack_of_hearts.get_suit());
+    ASSERT_EQUAL(DIAMONDS, jack_of_diamonds.get_suit());
+    ASSERT_EQUAL(SPADES, jack_of_spades.get_suit());
+    ASSERT_EQUAL(CLUBS, jack_of_clubs.get_suit());
     ASSERT_EQUAL(DIAMONDS, two_of_diamonds.get_suit());
     ASSERT_EQUAL(SPADES, nine_of_spades.get_suit());
     ASSERT_NOT_EQUAL(DIAMONDS, jack_of_spades.get_suit());
@@ -152,7 +152,7 @@ TEST(tests_card_less) {
     ASSERT_TRUE(Card_less(nonTrumpCard, trumpCard1, trumpSuit));
 
     // Test Case 10: a < b
-    Card lowCard(TWO, HEARTS);
+    Card lowCard(TWO, SPADES);
     Card highCard(ACE, DIAMONDS);
     ASSERT_TRUE(Card_less(lowCard, highCard, trumpSuit));
 
