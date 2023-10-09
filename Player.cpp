@@ -82,6 +82,7 @@ class SimplePlayer: public Player {
     int cardNum = 0;
     hand.push_back(upcard);
     // find lowest value card
+    /*
     for (int i = 0; i < hand.size(); ++i) {
         for (int j = i + 1; j < hand.size(); ++j) {
           if (Card_less(hand[i],hand[j],upcard.get_suit()) && 
@@ -90,6 +91,16 @@ class SimplePlayer: public Player {
           }
         }
       }
+      */
+     // find lowest value card
+     for (int i = 0; i < hand.size(); ++i) {
+        if (Card_less(hand[i], hand[cardNum], upcard.get_suit()) && 
+             !hand[i].is_trump(upcard.get_suit())) {
+          cardNum = i;
+        }
+      }
+    
+      // erase lowest value card
     hand.erase(hand.begin() + cardNum);
   }
 
@@ -104,7 +115,7 @@ class SimplePlayer: public Player {
     }
     // chooses lead card for all trump
     if (trump_count == hand.size()) {
-      for (int i = 1; i < hand.size(); ++i) {
+      for (int i = 1; i < hand.size() + 1; ++i) {
         if (Card_less(hand[val], hand[i - 1], trump)) {
           val = i - 1;
         }
@@ -121,15 +132,27 @@ class SimplePlayer: public Player {
     // chooses lead card for when it's not all trump
     // should this one account for left bower
     // or would the left bower count as a trump card?
+    /*
     else {
-      for (int i = 0; i < hand.size(); ++i) {
-        for (int j = i + 1; j < hand.size(); ++j) {
-          if (Card_less(hand[i],hand[j],trump) && !hand[j].is_trump(trump)) {
-            val = j;
-          }
+      // chooses highest card of non trump suit
+      for (int j = 1; j < hand.size() + 1; ++j) {
+        if (Card_less(hand[val],hand[j - 1], trump) && !hand[j].is_trump(trump)) {
+          val = j - 1;
         }
       }
     }
+    */
+   
+    else {
+        for (int i = 0; i < hand.size(); ++i) {
+          for (int j = i + 1; j < hand.size(); ++j) {
+            if (Card_less(hand[i],hand[j],trump) && !hand[j].is_trump(trump)) {
+              val = j;
+            }
+          }
+        }
+      }
+      
     Card erasedCard = hand[val] ;
     hand.erase(hand.begin() + val);
     return erasedCard;
@@ -137,32 +160,33 @@ class SimplePlayer: public Player {
 
   Card play_card(const Card &led_card, Suit trump) {
     //check for cards of led suit
+    assert(hand.size() > 0);
     int count = 0;
     int val = 0;
     for (int i = 0; i < hand.size(); ++i) {
       if (hand[i].get_suit() == led_card.get_suit()) {
         // if hand contains card of led suit, increments by 1
         ++count;
-        val = i;
+        //cout << "count: " << count << endl;
       }
     }
     // if count > 0, plays highest card
     if (count > 0) {
-    for (int i = 0; i < hand.size(); ++i) {
-      if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit() == led_card.get_suit()) {
-        val = i;
+      for (int i = 0; i < hand.size(); ++i) {
+        if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit() == led_card.get_suit()) {
+          val = i;
+        }
       }
-    }
     }
     // if count == 0, plays lowest card
     else {
       for (int i = 0; i < hand.size(); ++i) {
-      if (Card_less(hand[i], hand[val], led_card, trump)) {
-        val = i;
+        if (Card_less(hand[i], hand[val], led_card, trump)) {
+          val = i;
+        }
       }
     }
-    }
-    Card erasedCard = hand[val] ;
+    Card erasedCard = hand[val];
     hand.erase(hand.begin() + val);
     return erasedCard;
     //if has, play highest of these

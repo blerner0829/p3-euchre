@@ -31,9 +31,9 @@
   // REQUIRES: cards remain in the Pack
   // EFFECTS: Returns the next card in the pack and increments the next index
   Card Pack::deal_one() {
-    Card card = cards[next];
+    Card first = cards[next];
     ++next;
-    return card;
+    return first;
   }
 
   // EFFECTS: Resets next index to first card in the Pack
@@ -71,5 +71,5 @@
 
 // EFFECTS: returns true if there are no more cards left in the pack
   bool Pack::empty() const {
-    return next - 1 == PACK_SIZE - 1;
+    return next == PACK_SIZE;
   }
