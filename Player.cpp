@@ -94,8 +94,7 @@ class SimplePlayer: public Player {
       */
      // find lowest value card
      for (int i = 0; i < hand.size(); ++i) {
-        if (Card_less(hand[i], hand[cardNum], upcard.get_suit()) && 
-             !hand[i].is_trump(upcard.get_suit())) {
+        if (Card_less(hand[i], hand[cardNum], upcard.get_suit())) {
           cardNum = i;
         }
       }
@@ -129,20 +128,7 @@ class SimplePlayer: public Player {
         }
       }
     }
-    // chooses lead card for when it's not all trump
-    // should this one account for left bower
-    // or would the left bower count as a trump card?
-    /*
-    else {
-      // chooses highest card of non trump suit
-      for (int j = 1; j < hand.size() + 1; ++j) {
-        if (Card_less(hand[val],hand[j - 1], trump) && !hand[j].is_trump(trump)) {
-          val = j - 1;
-        }
-      }
-    }
-    */
-   
+    
     else {
         for (int i = 0; i < hand.size(); ++i) {
           for (int j = i + 1; j < hand.size(); ++j) {

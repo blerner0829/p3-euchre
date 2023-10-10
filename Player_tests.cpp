@@ -291,19 +291,22 @@ TEST(test_lead_card_complex) {
     // queen_of_hearts, jack_of_diamonds, jack_of_clubs,
     // king_of_hearts, ten_of_hearts
     ASSERT_EQUAL(jack_of_clubs, player->lead_card(HEARTS));
-    // queen_of_hearts, jack_of_clubs, 
+    // queen_of_hearts, jack_of_diamonds, 
     // king_of_hearts, ten_of_hearts
     player->add_and_discard(nine_of_hearts);
-    // jack_of_diamonds, king_of_hearts,
-    // ten_of_hearts, nine_of_hearts
+    // queen_of_hearts, jack_of_diamonds, 
+    // king_of_hearts, ten_of_hearts
     ASSERT_EQUAL(jack_of_diamonds, player->lead_card(HEARTS));
-    // king_of_hearts, ten_of_hearts, nine_of_hearts
+    // queen_of_hearts
+    // king_of_hearts, ten_of_hearts
     player->add_and_discard(jack_of_hearts);
-    // ten_of_hearts, nine_of_hearts, jack_of_hearts
+    // queen_of_hearts
+    // king_of_hearts, jack_of_hearts
     ASSERT_EQUAL(jack_of_hearts, player->lead_card(HEARTS));
-    // ten_of_hearts, nine_of_hearts
-    ASSERT_EQUAL(ten_of_hearts, player->lead_card(CLUBS));
-    // nine_of_hearts
+    // queen_of_hearts
+    // king_of_hearts
+    ASSERT_EQUAL(king_of_hearts, player->lead_card(CLUBS));
+    // queen_of_hearts
     player->add_and_discard(ace_of_hearts);
     // ace_of_hearts
     ASSERT_EQUAL(ace_of_hearts, player->play_card(nine_of_hearts, HEARTS))
