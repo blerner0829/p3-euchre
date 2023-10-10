@@ -22,8 +22,10 @@
   // EFFECTS: Initializes Pack by reading from pack_input.
   Pack::Pack(std::istream& pack_input) {
     int i = 0;
-    while (pack_input >> cards[i]) {
-        ++i;
+    Card card;
+    while (pack_input >> card) {
+      cards[i] = card;
+      ++i;
     }
     next = 0;
   }
