@@ -34,6 +34,7 @@ Card two_of_hearts(TWO, HEARTS);
 Card three_of_clubs(THREE, CLUBS);
 Card two_of_diamonds(TWO, DIAMONDS);
 Card jack_of_spades(JACK, SPADES);
+Card two_of_clubs(TWO, CLUBS);
 
 TEST(test_card_ctor) {
     Card card;
@@ -60,6 +61,7 @@ TEST(test_suit) {
     ASSERT_EQUAL(DIAMONDS, two_of_diamonds.get_suit());
     ASSERT_EQUAL(SPADES, nine_of_spades.get_suit());
     ASSERT_NOT_EQUAL(DIAMONDS, jack_of_spades.get_suit());
+    ASSERT_EQUAL(SPADES, jack_of_clubs.get_suit(SPADES));
 }
 
 TEST(tests_suit_trump) {
@@ -105,6 +107,57 @@ TEST(tests_is_trump) {
     ASSERT_TRUE(jack_of_hearts.is_trump(DIAMONDS));
     ASSERT_FALSE(jack_of_hearts.is_trump(SPADES));
     ASSERT_TRUE(three_of_clubs.is_trump(CLUBS));
+}
+
+TEST(test_face_or_ace) {
+    ASSERT_TRUE(jack_of_hearts.is_face_or_ace());
+    ASSERT_TRUE(queen_of_spades.is_face_or_ace());
+    ASSERT_TRUE(king_of_clubs.is_face_or_ace());
+    ASSERT_TRUE(ace_of_diamonds.is_face_or_ace());
+    ASSERT_FALSE(two_of_hearts.is_face_or_ace());
+}
+
+TEST(test_operators) {
+    /*
+    ASSERT_TRUE(jack_of_hearts > two_of_clubs);
+    ASSERT_FALSE(two_of_spades > jack_of_hearts);
+
+    ASSERT_TRUE(ten_of_clubs <= ten_of_diamonds);
+    ASSERT_TRUE(ten_of_clubs <= ten_of_clubs);
+    ASSERT_FALSE(ten_of_clubs <= ten_of_spades);
+
+    ASSERT_TRUE(queen_of_clubs > ten_of_clubs);
+    ASSERT_FALSE(ten_of_hearts > queen_of_clubs);
+
+    ASSERT_TRUE(queen_of_diamonds >= ten_of_clubs);
+    ASSERT_TRUE(queen_of_clubs >= queen_of_hearts);
+    ASSERT_FALSE(ten_of_hearts >= queen_of_clubs);
+
+    ASSERT_TRUE(ten_of_clubs == ten_of_clubs);
+    ASSERT_FALSE(ten_of_clubs == queen_of_diamonds);
+
+    ASSERT_TRUE(ten_of_clubs != queen_of_diamonds);
+    ASSERT_FALSE(ten_of_clubs != ten_of_hearts);
+*/
+    ASSERT_TRUE(jack_of_hearts > two_of_clubs);
+    ASSERT_FALSE(two_of_spades > jack_of_hearts);
+
+    ASSERT_TRUE(ten_of_clubs <= ten_of_diamonds);
+    ASSERT_TRUE(ten_of_spades <= ten_of_clubs);
+    ASSERT_FALSE(jack_of_clubs <= ten_of_spades);
+
+    ASSERT_TRUE(queen_of_clubs > ten_of_clubs);
+    ASSERT_FALSE(ten_of_hearts > queen_of_clubs);
+
+    ASSERT_TRUE(queen_of_diamonds >= ten_of_clubs);
+    ASSERT_TRUE(queen_of_clubs >= queen_of_hearts);
+    ASSERT_FALSE(ten_of_hearts >= queen_of_clubs);
+
+    ASSERT_TRUE(ten_of_clubs == ten_of_clubs);
+    ASSERT_FALSE(ten_of_clubs == queen_of_diamonds);
+
+    ASSERT_TRUE(ten_of_clubs != queen_of_diamonds);
+    ASSERT_TRUE(ten_of_clubs != ten_of_hearts);
 }
 
 TEST(test_suit_next) {
@@ -189,6 +242,7 @@ TEST(tests_card_less_led) {
 
     ASSERT_TRUE(Card_less(jack_of_clubs, queen_of_diamonds, ten_of_hearts, HEARTS));
     ASSERT_FALSE(Card_less(king_of_spades, nine_of_diamonds, ten_of_clubs, CLUBS));
+
 
 }
 
