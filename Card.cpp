@@ -179,6 +179,9 @@ bool operator<(const Card &lhs, const Card &rhs) {
   if (lhs.get_rank() < rhs.get_rank()) {
     return true;
   }
+  else if (lhs.get_rank() == rhs.get_rank()) {
+    return lhs.get_suit() < rhs.get_suit();
+  }
   else {
     return false;
   }
@@ -209,7 +212,15 @@ bool operator<=(const Card &lhs, const Card &rhs) {
 //  Does not consider trump.
 //   operator>
 bool operator>(const Card &lhs, const Card &rhs) {
-  return lhs.get_rank() > rhs.get_rank();
+  if (lhs.get_rank() > rhs.get_rank()) {
+    return true;
+  }
+  else if (lhs.get_rank() == rhs.get_rank()) {
+    return lhs.get_suit() > rhs.get_suit();
+  }
+  else {
+    return false;
+  }
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card 

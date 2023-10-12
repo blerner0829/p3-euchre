@@ -121,23 +121,23 @@ TEST(play_card_highest_edge) {
     player->add_card(jack_of_diamonds);
     player->add_card(jack_of_clubs);
     player->add_card(ace_of_spades);
-    // ten_of_spades, jack_of_clubs, ace_of_spades, 
-    // jack_of_spades, jack_of_diamonds
+    // jack_of_spades, ten_of_spades, jack_of_diamonds,
+    // jack_of_clubs, ace_of_spades
     ASSERT_EQUAL(jack_of_spades, player->play_card(nine_of_spades, SPADES));
     // ten_of_spades, jack_of_clubs, ace_of_spades, 
     // jack_of_diamonds
     player->add_card(jack_of_spades);
-    // ten_of_spades, jack_of_clubs, ace_of_spades, 
-    // jack_of_diamonds, jack_of_spades
+    // ten_of_spades, jack_of_diamonds, jack_of_clubs,
+    // ace_of_spades, jack_of_spades
     ASSERT_EQUAL(ten_of_spades, player->play_card(ten_of_diamonds, HEARTS));
     // jack_of_diamonds, jack_of_clubs, ace_of_spades, 
     // jack_of_spades
     player->add_card(ten_of_spades);
-    // ten_of_spades, jack_of_clubs, ace_of_spades, 
-    // jack_of_spades, jack_of_diamonds
+    // jack_of_diamonds_, jack_of_clubs, ace_of_spades,
+    // jack_of_spades, ten_of_spades
     player->add_and_discard(queen_of_clubs); // ten of spades
-    // jack_of_clubs, ace_of_spades, 
-    // jack_of_spades, jack_of_diamonds, queen_of_clubs
+    // jack_of_diamonds, jack_of_clubs, ace_of_spades,
+    // jack_of_spades, queen_of_clubs
     player->add_and_discard(queen_of_hearts); // jack of spades
     // jack_of_clubs, ace_of_spades, 
     // jack_of_diamonds, queen_of_clubs, queen_of_hearts
