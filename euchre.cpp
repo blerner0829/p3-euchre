@@ -340,7 +340,8 @@ class Game {
     //Compare all cards played, whichever has the highest value wins round
     //Player who won has name printed out below
     for (int i = 0; i < 4; ++i) {
-      if (cardGreatest == trickInfo[i].first && (cardGreatest.get_suit() == trickInfo[i].first.get_suit())) {
+      if (cardGreatest == trickInfo[i].first && (cardGreatest.get_suit()
+                                        == trickInfo[i].first.get_suit())) {
         winningPlayer = trickInfo[i].second;
         leadPlayer = (leadPlayer + i) % 4;
         if (leadPlayer % 2 == 0) {
@@ -380,6 +381,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < argc; ++i) {
     cout << argv[i] << " ";
   }
+  cout << endl;
 
   ifstream input_file(argv[1]);
   Game game(input_file);

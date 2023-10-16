@@ -173,7 +173,8 @@ class SimplePlayer: public Player {
     // if count, plays highest card of led suit
     if (count) {
       for (int i = 0; i < hand.size(); ++i) {
-        if (Card_less(hand[val], hand[i], led_card, trump) && hand[i].get_suit(trump) == led_card.get_suit(trump)) {
+        if (Card_less(hand[val], hand[i], led_card, trump) && 
+                  hand[i].get_suit(trump) == led_card.get_suit(trump)) {
           val = i;
         }
       }
