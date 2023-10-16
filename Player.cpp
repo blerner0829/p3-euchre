@@ -130,14 +130,18 @@ class SimplePlayer: public Player {
     }
     
     else {
-        for (int i = 0; i < hand.size(); ++i) {
-          for (int j = i + 1; j < hand.size(); ++j) {
-            if (Card_less(hand[i],hand[j],trump) && !hand[j].is_trump(trump)) {
-              val = j;
-            }
+      //makes sure the card that is initially the highest is not trump card
+      while (hand[val].is_trump(trump)) {
+        ++val;
+      }
+      for (int i = 0; i < hand.size(); ++i) {
+        for (int j = i + 1; j < hand.size(); ++j) {
+          if (Card_less(hand[val],hand[j],trump) && !hand[j].is_trump(trump)) {
+            val = j;
           }
         }
       }
+    }
       
     Card erasedCard = hand[val] ;
     hand.erase(hand.begin() + val);

@@ -37,18 +37,19 @@ class Game {
   }
 
   void print_opening() {
+    if ((handNum > 0) && (dealer < 3)) {
+      ++dealer;
+    }
+    else {
+      dealer = 0;
+    }
     cout << "Hand " << handNum << endl;
     cout << *player[dealer] << " deals" << endl;
     deal();
     upCard = pack.deal_one();
     cout << upCard << " turned up" << endl;
     ++handNum;
-    if ((round > 0) && (dealer < 3)) {
-      ++dealer;
-    }
-    else {
-      dealer = 0;
-    }
+    roundPlay = true;
   }
 
   void print_round() {
@@ -158,6 +159,7 @@ class Game {
       cout << player[1]->get_name() << " and " 
            << player[3]->get_name() << " win!";
     }
+    cout << endl;
   }
 
   void player_maker(vector<pair<string, string>> playerPairs) {
@@ -182,13 +184,13 @@ class Game {
   int team2;
   int onePoints;
   int twoPoints;
-  int orderUpPlayer;
   int trickCounter;
   Suit order_up_suit;
   bool trumpMade = false;
   int trumpRound;
   int trumpTeam;
   bool roundPlay;
+  int leadPlayer;
 
   void reset_round() {
     if (onePoints > twoPoints) {
@@ -196,6 +198,10 @@ class Game {
            << player[2]->get_name() << " win the hand" << endl;
       if (trumpTeam == 2){
         cout << "euchred!" << endl;
+        team1 += 2;
+      }
+      else if (twoPoints == 0) {
+        cout << "march!" << endl;
         team1 += 2;
       }
       else {
@@ -207,6 +213,10 @@ class Game {
            << player[3]->get_name() << " win the hand" << endl;
       if (trumpTeam == 1){
         cout << "euchred!" << endl;
+        team2 += 2;
+      }
+      else if (onePoints == 0) {
+        cout << "march!" << endl;
         team2 += 2;
       }
       else {
@@ -278,9 +288,8 @@ class Game {
       cout << player[i % 4]->get_name() << " orders up " 
           << order_up_suit << endl << endl;
       if (round == 0) {
-        player[i % 4]->add_and_discard(upCard);
+        player[dealer]->add_and_discard(upCard);
       }
-      orderUpPlayer = i % 4;
       if (i % 2 == 0) {
         trumpTeam = 1;
       }
@@ -292,16 +301,19 @@ class Game {
 
   void play_trick() {
     Card cardGreatest;
-    Card ledCard = player[orderUpPlayer]->lead_card(order_up_suit);
+    if (trickCounter == 1) {
+      leadPlayer = ((dealer + 1) % 4);
+    }
+    Card ledCard = player[leadPlayer]->lead_card(order_up_suit);
     vector<pair<Card, string>> trickInfo {
       {ledCard,
-       player[orderUpPlayer]->get_name()},
-      {player[(orderUpPlayer + 1) % 4]->play_card(ledCard, order_up_suit),
-       player[(orderUpPlayer + 1) % 4]->get_name()},
-      {player[(orderUpPlayer + 2) % 4]->play_card(ledCard, order_up_suit),
-       player[(orderUpPlayer + 2) % 4]->get_name()},
-      {player[(orderUpPlayer + 3) % 4]->play_card(ledCard, order_up_suit),
-       player[(orderUpPlayer + 3) % 4]->get_name()}
+       player[leadPlayer]->get_name()},
+      {player[(leadPlayer + 1) % 4]->play_card(ledCard, order_up_suit),
+       player[(leadPlayer + 1) % 4]->get_name()},
+      {player[(leadPlayer + 2) % 4]->play_card(ledCard, order_up_suit),
+       player[(leadPlayer + 2) % 4]->get_name()},
+      {player[(leadPlayer + 3) % 4]->play_card(ledCard, order_up_suit),
+       player[(leadPlayer + 3) % 4]->get_name()}
     };
     
     cout << trickInfo[0].first << " led by "
@@ -330,8 +342,8 @@ class Game {
     for (int i = 0; i < 4; ++i) {
       if (cardGreatest == trickInfo[i].first && (cardGreatest.get_suit() == trickInfo[i].first.get_suit())) {
         winningPlayer = trickInfo[i].second;
-        orderUpPlayer = (orderUpPlayer + i) % 4;
-        if (i % 2 == 0) {
+        leadPlayer = (leadPlayer + i) % 4;
+        if (leadPlayer % 2 == 0) {
           ++onePoints;
         }
         else {
@@ -346,6 +358,9 @@ class Game {
   }
 
   void play_hand() {
+    if (shuffle) {
+      pack.shuffle();
+    }
     print_opening();
     while (roundPlay) {
       print_round();
@@ -371,7 +386,6 @@ int main(int argc, char **argv) {
   game.set_shuffle(argv[2]);
   game.set_maxPoints(argv[3]);
   game.player_maker(playerPairs);
-  cout << endl;
   game.play();
   game.delete_players();
 }

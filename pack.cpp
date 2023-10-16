@@ -50,9 +50,9 @@
   void Pack::shuffle() {
     Card newDeck[PACK_SIZE];
     int shuffleTimes = 0;
-    int j = PACK_SIZE / 2;
+    int halfPack = PACK_SIZE / 2;
     while (shuffleTimes < 7) {
-      for (int i = 0; i < PACK_SIZE - 1; ++i) {
+      /*for (int i = 0; i < PACK_SIZE - 1; ++i) {
         if ((i + 1) % 2 == 0) {
             newDeck[i] = cards[((i + 1) / 2) - 1];
         }
@@ -65,7 +65,20 @@
         cards[i] = newDeck[i];
       }
       ++shuffleTimes;
-      j = PACK_SIZE / 2;
+      j = PACK_SIZE / 2; */
+      for (int i = 0; i < PACK_SIZE; ++i) {
+        if (i - halfPack < 0) {
+          newDeck[((i + 1) * 2) - 1] = cards[i];
+        }
+        else {
+          newDeck[(i - halfPack) * 2] = cards[i];
+        }
+      }
+      ++shuffleTimes;
+
+      for (int i = 0; i < PACK_SIZE; i++) {
+        cards[i] = newDeck[i];
+      }
    }
    reset();
   }

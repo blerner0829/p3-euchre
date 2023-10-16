@@ -334,7 +334,7 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
 // a = jack of spades b = ace of spades trump = spades
 bool Card_less(const Card &a, const Card &b, const Card
              &led_card, Suit trump) {
-  int led_suit = led_card.get_suit();
+  int led_suit = led_card.get_suit(trump);
   if (a == b) {
     return false;
   }
