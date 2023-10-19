@@ -51,10 +51,8 @@ class Game {
     ++handNum;
     roundPlay = true;
   }
-
-  void print_round() {
-    if (round == 0) {
-      for (int i = dealer + 1; i < dealer + 5;) {
+  void print_round_zero() {
+    for (int i = dealer + 1; i < dealer + 5;) {
           while ((!trumpMade) && (trumpRound < 4)) {
             make_trump(i);
             ++trumpRound;
@@ -63,13 +61,14 @@ class Game {
             if ((trumpMade)|| trumpRound >= 4) {
               break; // exit the loop if the condition becomes false
             }
-        }
-      trumpRound = 0;
-      ++round;
-      roundPlay = true;
     }
-    else if (round == 1) {
-      if (trumpMade) {
+    trumpRound = 0;
+    ++round;
+    roundPlay = true;
+  }
+
+  void print_round_one() {
+    if (trumpMade) {
         play_trick();
       }
       else {
@@ -83,15 +82,18 @@ class Game {
               break; // exit the loop if the condition becomes false
             }
         }
-      }
-      //if round 1 either play a normal hand (1st card) 
+    }
+   //if round 1 either play a normal hand (1st card) 
       //OR if trump wasn't chosen choose trump
       trumpRound = 0;
       ++round;
       roundPlay = true;
-    }
-    else if (round == 2) {
-      if (trumpMade) {
+  }
+  void print_round_two() {
+    //if round 2 either play normal hand (1st card if round 1
+    // trump was made,
+    //2nd if made round 0) OR discard hand (redeal, start new hand)
+    if (trumpMade) {
         play_trick();
         ++round;
         roundPlay = true;
@@ -100,9 +102,16 @@ class Game {
         reset_round();
         roundPlay = false;
       }
-      //if round 2 either play normal hand (1st card if round 1
-      // trump was made,
-              //2nd if made round 0) OR discard hand (redeal, start new hand)
+  }
+  void print_round() {
+    if (round == 0) {
+      print_round_zero();
+    }
+    else if (round == 1) {
+      print_round_one();
+      }
+    else if (round == 2) {
+      print_round_two();
     }
     else if (round == 3) {
       play_trick();
@@ -192,6 +201,15 @@ class Game {
   bool roundPlay;
   int leadPlayer;
 
+  void print_stats() {
+    cout << player[0]->get_name() << " and " 
+         << player[2]->get_name() << " have "
+         << team1 << " points" << endl;
+    cout << player[1]->get_name() << " and " 
+         << player[3]->get_name() << " have "
+         << team2 << " points" << endl << endl;
+  }
+  
   void reset_round() {
     if (onePoints > twoPoints) {
       cout << player[0]->get_name() << " and " 
@@ -223,12 +241,7 @@ class Game {
         ++team2;
       }
     }
-    cout << player[0]->get_name() << " and " 
-         << player[2]->get_name() << " have "
-         << team1 << " points" << endl;
-    cout << player[1]->get_name() << " and " 
-         << player[3]->get_name() << " have "
-         << team2 << " points" << endl << endl;
+    print_stats();
     round = 0;
     trumpMade = false;
     trickCounter = 1;
@@ -315,7 +328,7 @@ class Game {
       {player[(leadPlayer + 3) % 4]->play_card(ledCard, order_up_suit),
        player[(leadPlayer + 3) % 4]->get_name()}
     };
-    
+
     cout << trickInfo[0].first << " led by "
          << trickInfo[0].second << endl;
     cout << trickInfo[1].first << " played by " 
@@ -325,18 +338,14 @@ class Game {
     cout << trickInfo[3].first << " played by " 
          << trickInfo[3].second << endl;
 
-    
-
     cardGreatest = trickInfo[0].first;
     string winningPlayer = "";
-    
     for (int j = 1; j < trickInfo.size(); ++j) {
       if (Card_less(cardGreatest, trickInfo[j].first, ledCard, order_up_suit)) {
         cardGreatest = trickInfo[j % 4].first;
       }
     }
 
-  
     //Compare all cards played, whichever has the highest value wins round
     //Player who won has name printed out below
     for (int i = 0; i < 4; ++i) {
