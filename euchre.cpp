@@ -58,9 +58,9 @@ class Game {
             ++trumpRound;
             ++i;
           }
-            if ((trumpMade)|| trumpRound >= 4) {
-              break; // exit the loop if the condition becomes false
-            }
+          if ((trumpMade)|| trumpRound >= 4) {
+            break; // exit the loop if the condition becomes false
+          }
     }
     trumpRound = 0;
     ++round;
@@ -69,25 +69,25 @@ class Game {
 
   void print_round_one() {
     if (trumpMade) {
-        play_trick();
+      play_trick();
       }
-      else {
-        for (int i = dealer + 1; i < dealer + 5;) {
-          while ((!trumpMade) && (trumpRound < 4)) {
-            make_trump(i);
-            ++trumpRound;
-            ++i;
-          }
-          if ((trumpMade) || trumpRound >= 4) {
-              break; // exit the loop if the condition becomes false
-            }
+    else {
+      for (int i = dealer + 1; i < dealer + 5;) {
+        while ((!trumpMade) && (trumpRound < 4)) {
+          make_trump(i);
+          ++trumpRound;
+          ++i;
         }
+        if ((trumpMade) || trumpRound >= 4) {
+          break; // exit the loop if the condition becomes false
+        }
+      }
     }
    //if round 1 either play a normal hand (1st card) 
       //OR if trump wasn't chosen choose trump
-      trumpRound = 0;
-      ++round;
-      roundPlay = true;
+    trumpRound = 0;
+    ++round;
+    roundPlay = true;
   }
   void print_round_two() {
     //if round 2 either play normal hand (1st card if round 1
@@ -103,6 +103,7 @@ class Game {
         roundPlay = false;
       }
   }
+
   void print_round() {
     if (round == 0) {
       print_round_zero();
