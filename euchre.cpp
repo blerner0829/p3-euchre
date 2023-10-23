@@ -5,6 +5,7 @@
 #include "Pack.hpp"
 #include "Card.hpp"
 #include <fstream>
+#include <algorithm>
 using namespace std;
 
 class Game {
@@ -24,6 +25,7 @@ class Game {
     trickCounter = 1;
     trumpRound = 0;
     roundPlay = true;
+    winningPlayerNum = 0;
   }
 
   void set_shuffle(string str) {
@@ -200,6 +202,7 @@ class Game {
   int trumpTeam;
   bool roundPlay;
   int leadPlayer;
+  int winningPlayerNum;
 
   void print_stats() {
     cout << player[0]->get_name() << " and " 
@@ -296,8 +299,6 @@ class Game {
       }
     else {
       trumpMade = true;
-      player[i % 4]->make_trump(upCard, 
-      is_dealer(i % 4), round, order_up_suit);
       cout << player[i % 4]->get_name() << " orders up " 
           << order_up_suit << endl << endl;
       if (round == 0) {
@@ -315,62 +316,47 @@ class Game {
   void play_trick() {
     Card cardGreatest;
     if (trickCounter == 1) {
-      leadPlayer = ((dealer + 1) % 4);
+        leadPlayer = ((dealer + 1) % 4);
     }
+    
     Card ledCard = player[leadPlayer]->lead_card(order_up_suit);
-    vector<pair<Card, string>> trickInfo {
-      {ledCard,
-       player[leadPlayer]->get_name()},
-      {player[(leadPlayer + 1) % 4]->play_card(ledCard, order_up_suit),
-       player[(leadPlayer + 1) % 4]->get_name()},
-      {player[(leadPlayer + 2) % 4]->play_card(ledCard, order_up_suit),
-       player[(leadPlayer + 2) % 4]->get_name()},
-      {player[(leadPlayer + 3) % 4]->play_card(ledCard, order_up_suit),
-       player[(leadPlayer + 3) % 4]->get_name()}
-    };
 
-    cout << trickInfo[0].first << " led by "
-         << trickInfo[0].second << endl;
-    cout << trickInfo[1].first << " played by " 
-         << trickInfo[1].second << endl;
-    cout << trickInfo[2].first << " played by " 
-         << trickInfo[2].second << endl;
-    cout << trickInfo[3].first << " played by " 
-         << trickInfo[3].second << endl;
+    // Print the lead card
+    cout << ledCard << " led by " << player[leadPlayer]->get_name() << endl;
 
-    cardGreatest = trickInfo[0].first;
-    string winningPlayer = "";
-    for (int j = 1; j < trickInfo.size(); ++j) {
-      if (Card_less(cardGreatest, trickInfo[j].first, ledCard, order_up_suit)) {
-        cardGreatest = trickInfo[j % 4].first;
-      }
+    cardGreatest = ledCard;
+    string winningPlayer = player[leadPlayer]->get_name();
+    winningPlayerNum = leadPlayer;
+
+    for (int i = 1; i < 4; ++i) {
+        int currentPlayer = (leadPlayer + i) % 4;
+        Card playedCard = player[currentPlayer]->play_card(ledCard, order_up_suit);
+        cout << playedCard << " played by " << player[currentPlayer]->get_name() << endl;
+
+        if (Card_less(cardGreatest, playedCard, ledCard, order_up_suit)) {
+            cardGreatest = playedCard;
+            winningPlayer = player[currentPlayer]->get_name();
+            winningPlayerNum = currentPlayer;
+        }
     }
 
-    //Compare all cards played, whichever has the highest value wins round
-    //Player who won has name printed out below
-    for (int i = 0; i < 4; ++i) {
-      if (cardGreatest == trickInfo[i].first && (cardGreatest.get_suit()
-                                        == trickInfo[i].first.get_suit())) {
-        winningPlayer = trickInfo[i].second;
-        leadPlayer = (leadPlayer + i) % 4;
-        if (leadPlayer % 2 == 0) {
-          ++onePoints;
-        }
-        else {
-          ++twoPoints;
-        }
-        break;
-      }
+    leadPlayer = winningPlayerNum;
+    if (leadPlayer % 2 == 0) {
+        ++onePoints;
+    }
+    else {
+        ++twoPoints;
     }
 
-    cout <<  winningPlayer << " takes the trick" << endl << endl;
+    cout << winningPlayer << " takes the trick" << endl << endl;
     ++trickCounter;
-  }
+}
 
   void play_hand() {
     if (shuffle) {
       pack.shuffle();
     }
+    pack.reset();
     print_opening();
     while (roundPlay) {
       print_round();

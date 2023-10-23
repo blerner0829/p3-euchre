@@ -212,6 +212,7 @@ class HumanPlayer: public Player {
 
     void add_card(const Card &c) {
       hand.push_back(c);
+      sort(hand.begin(), hand.end());
     }
 
     bool make_trump(const Card &upcard, bool is_dealer,
@@ -234,7 +235,6 @@ class HumanPlayer: public Player {
     void add_and_discard(const Card &upcard) {
       int cardNum = 0;
 
-      hand.push_back(upcard);
       print_hand();
       cout << "Discard upcard: [-1]\n";
       cout << "Human player " << name
@@ -247,7 +247,7 @@ class HumanPlayer: public Player {
       else {
         hand.erase(hand.begin() + cardNum);
       }
-
+      add_card(upcard);
     }
 
     Card lead_card(Suit trump) {
@@ -257,7 +257,9 @@ class HumanPlayer: public Player {
       cout << "Human player " << name << ", please select a card:\n";
       cin >> cardNum;
 
-      return hand[cardNum];
+      Card erasedCard = hand[cardNum];
+      hand.erase(hand.begin() + cardNum);
+      return erasedCard;
     }
 
     Card play_card(const Card &led_card, Suit trump) {
@@ -267,7 +269,9 @@ class HumanPlayer: public Player {
       cout << "Human player " << name << ", please select a card:\n";
       cin >> cardNum;
 
-      return hand[cardNum];
+      Card erasedCard = hand[cardNum];
+      hand.erase(hand.begin() + cardNum);
+      return erasedCard;
     }
 
  private:
@@ -275,7 +279,7 @@ class HumanPlayer: public Player {
   vector<Card> hand;
 
   void print_hand() const {
-    for (size_t i=0; i < MAX_HAND_SIZE; ++i)
+    for (size_t i=0; i < hand.size(); ++i)
       cout << "Human player " << name << "'s hand: "
            << "[" << i << "] " << hand[i] << "\n";
   }
