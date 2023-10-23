@@ -5,6 +5,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 std::ostream & operator<<(std::ostream &os, const Player &p) {
