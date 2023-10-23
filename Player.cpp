@@ -104,7 +104,7 @@ class SimplePlayer: public Player {
     hand.erase(hand.begin() + cardNum);
   }
 
-  Card lead_card(Suit trump) {
+    Card lead_card(Suit trump) {
     int trump_count = 0;
     int val = 0;
     //checks if there is at least one card of non trump
@@ -137,9 +137,10 @@ class SimplePlayer: public Player {
       }
       for (int i = 0; i < hand.size(); ++i) {
         for (int j = i + 1; j < hand.size(); ++j) {
-          if (Card_less(hand[val],hand[j],trump) && !hand[j].is_trump(trump)) {
+          /*if (Card_less(hand[val],hand[j],trump) && !hand[j].is_trump(trump)) {
             val = j;
-          }
+          }*/
+  val = (Card_less(hand[val], hand[j], trump) && !hand[j].is_trump(trump)) ? j : val;
         }
       }
     }
