@@ -39,12 +39,10 @@ class SimplePlayer: public Player {
            hand[i].is_face_or_ace()) {
             ++numFaceAceLeft;
             }
-      }
-      if (numFaceAceLeft >= 2) {
+      } if (numFaceAceLeft >= 2) {
         order_up_suit = upcard.get_suit();
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     }
@@ -136,9 +134,10 @@ class SimplePlayer: public Player {
       }
       for (int i = 0; i < hand.size(); ++i) {
         for (int j = i + 1; j < hand.size(); ++j) {
-          if (Card_less(hand[val],hand[j],trump) && !hand[j].is_trump(trump)) {
+          /*if (Card_less(hand[val],hand[j],trump) && !hand[j].is_trump(trump)) {
             val = j;
-          }
+          }*/
+val = (Card_less(hand[val], hand[j], trump) && !hand[j].is_trump(trump)) ? j : val;
         }
       }
     }

@@ -334,6 +334,7 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
 // a = jack of spades b = ace of spades trump = spades
 bool Card_less(const Card &a, const Card &b, const Card
              &led_card, Suit trump) {
+              /*
   int led_suit = led_card.get_suit(trump);
   if (a == b) {
     return false;
@@ -373,31 +374,27 @@ bool Card_less(const Card &a, const Card &b, const Card
   else if ((a.get_suit() != led_suit) && (b.get_suit() == led_suit)) {
     return true;
   }
-  /*
-  else if (a.get_suit() == b.get_suit()) {
-    if (a.get_rank() < b.get_rank()) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-  else if (a == b) {
-    if (a.get_suit() < b.get_suit()) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-  else if (a < b) {
-    return true;
-  }
-  */
+  
  else if (a < b) {
   return true;
  }
   else {
     return false;
   }
+  */
+  int led_suit = led_card.get_suit(trump);
+    if (a == b) return false;
+    else if (a.is_right_bower(trump) && !b.is_right_bower(trump)) return false;
+    else if (!a.is_right_bower(trump) && b.is_left_bower(trump)) return true;
+    else if (a.is_left_bower(trump) && b.is_right_bower(trump)) return true;
+    else if (!a.is_right_bower(trump) && b.is_right_bower(trump)) return true;
+    else if (a.is_left_bower(trump) && !b.is_right_bower(trump)) return false;
+    else if (a.is_trump(trump) && b.is_trump(trump)) return (a < b);
+    else if (a.is_trump(trump) && !b.is_trump(trump)) return false;
+    else if (!a.is_trump(trump) && b.is_trump(trump)) return true;
+    else if ((a.get_suit() == led_suit) && (b.get_suit() != led_suit)) {
+      return false;
+    }
+    else if ((a.get_suit() != led_suit) && (b.get_suit() == led_suit)) return true;
+    else return (a < b);
 }
